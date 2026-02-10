@@ -88,10 +88,28 @@ export function StudentDashboard() {
 
         {/* Main Content */}
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        {/* Today's Workout Card */}
+        {/* Today's Workout Card - fundo: foto (url externa) ou gradiente dourado */}
         <Card className="bg-card border-primary/30 overflow-hidden">
-          <div className="bg-gradient-to-br from-primary/20 to-transparent p-4 sm:p-6">
-            <div className="flex items-start justify-between mb-4 gap-3">
+          <div
+            className="relative min-h-[200px] sm:min-h-[220px] p-4 sm:p-6 rounded-lg bg-cover bg-center"
+            style={
+              TREINO_HOJE_ILLUSTRATION_URL
+                ? {
+                    backgroundImage: `url('${TREINO_HOJE_ILLUSTRATION_URL}')`,
+                    backgroundColor: "#3d3529",
+                  }
+                : { background: "linear-gradient(135deg, rgba(213,159,57,0.25) 0%, rgba(213,159,57,0.05) 100%)" }
+            }
+          >
+            {/* Overlay escuro para legibilidade do texto (sem transparência no card) */}
+            {TREINO_HOJE_ILLUSTRATION_URL && (
+              <div
+                className="absolute inset-0 rounded-lg"
+                style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.75) 100%)" }}
+                aria-hidden
+              />
+            )}
+            <div className="relative z-10 flex items-start justify-between mb-4 gap-3">
               <div className="min-w-0 flex-1">
                 <Badge className="bg-primary text-primary-foreground mb-2 text-xs">
                   TREINO DE HOJE
@@ -113,7 +131,8 @@ export function StudentDashboard() {
               </div>
             </div>
 
-            <Button className="relative z-10 w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 sm:h-14 text-sm sm:text-base"
+            <Button
+              className="relative z-10 w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 sm:h-14 text-sm sm:text-base"
               onClick={() => navigate("/student/workout")}
             >
               <PlayCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />

@@ -1,6 +1,9 @@
-
-/** Cole aqui o link da imagem ilustrativa do card "Treino de hoje" */
-export const TREINO_HOJE_ILLUSTRATION_URL = '';
+/**
+ * URL da foto de fundo do card "Treino de hoje" (dashboard do aluno).
+ * Cole o link externo aqui. Ex.: 'https://exemplo.com/sua-imagem.jpg'
+ * Se vazio, o card usa o fundo dourado padrão.
+ */
+export const TREINO_HOJE_ILLUSTRATION_URL = '/teste.jpg';
 
 export const IMAGES = {
   LOGO_SHIELD: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAD7jTlj1mFLyhrTeGLyxo3LEEaKcFU-9CnUXYaXaEPygBDOd5lI-T9a_lUfB_1ORDvURynPeIOc6LhF9MPU6Wfhq2eST3HsX4GjRoqLTB__w_csbMbBRw7F23c2Zivf4uO1mTgQRYRpZApHSaw3htxFzA1YxxYE5MRR9zZfT4y9lMuqvXiLrHXXKHhPiXT7NU_20tow_qGhwE1_BWklhL3Z-CCP6khPSkZDV2t0R-gK-7ZjQ2MCzQkYiJT7ZKUaQhJWiDZctCpp2Xs',
