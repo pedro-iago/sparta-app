@@ -79,16 +79,23 @@ export function WorkoutOverviewScreen({
   return (
     <div className="min-h-screen bg-page-dark flex flex-col">
       {/* Hero: imagem principal do exercício (conteúdo não interativo) */}
-      <div className="relative w-full aspect-[4/3] sm:aspect-video max-h-[45vh] rounded-b-3xl overflow-hidden shrink-0">
+      <div className="relative w-full aspect-[4/3] sm:aspect-video max-h-[45vh] sm:max-h-[50vh] lg:max-h-[55vh] rounded-b-2xl sm:rounded-b-3xl overflow-hidden shrink-0 max-w-4xl mx-auto">
         <img
           src={heroImage}
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        {/* Transição suave entre imagem e texto (semi-transparência, sem corte brusco) */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-20 sm:h-28 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, transparent 0%, rgba(15, 20, 22, 0.4) 40%, rgba(15, 20, 22, 0.85) 100%)",
+          }}
+        />
 
         {/* Header sobreposto com fundo translúcido */}
-        <header className="absolute inset-x-0 top-0 z-10 glass-card border-0 rounded-none rounded-b-2xl px-4 py-3 flex items-center justify-between">
+        <header className="absolute inset-x-0 top-0 z-10 glass-card border-0 rounded-none rounded-b-2xl px-4 sm:px-6 py-3 flex items-center justify-between max-w-4xl mx-auto">
           <button
             type="button"
             onClick={onBack}
@@ -116,14 +123,14 @@ export function WorkoutOverviewScreen({
         </header>
       </div>
 
-      <main className="flex-1 overflow-y-auto pb-36 pt-4 px-4">
-        <div className="w-full max-w-2xl mx-auto space-y-5">
+      <main className="flex-1 overflow-y-auto pb-36 sm:pb-40 pt-4 sm:pt-6 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-2xl mx-auto space-y-5 sm:space-y-6">
           {/* Informações do treino: nome + metadados */}
           <div className="space-y-2">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight tracking-tight">
               {workout.name}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-white/70">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm sm:text-base text-white/70">
               <span className="flex items-center gap-1.5">
                 <Clock className="size-4 text-primary shrink-0" />
                 {workout.duration} min
@@ -145,8 +152,8 @@ export function WorkoutOverviewScreen({
           </div>
 
           {/* Lista de exercícios/séries (scrollável, cards individuais) */}
-          <div className="space-y-3">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white/80">
+          <div className="space-y-3 sm:space-y-4">
+            <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-white/80">
               Sequência
             </h2>
             <div className="flex flex-col gap-3">
@@ -166,7 +173,12 @@ export function WorkoutOverviewScreen({
                         alt=""
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                      <div
+                        className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
+                        style={{
+                          background: "linear-gradient(to bottom, transparent 0%, rgba(15, 20, 22, 0.5) 60%, rgba(15, 20, 22, 0.9) 100%)",
+                        }}
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-white font-semibold text-sm sm:text-base leading-tight truncate">
@@ -190,12 +202,12 @@ export function WorkoutOverviewScreen({
       </main>
 
       {/* CTA principal fixo no rodapé */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20 p-4 pt-8 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/95 to-transparent pointer-events-none">
-        <div className="max-w-2xl mx-auto pointer-events-auto">
+      <footer className="fixed bottom-0 left-0 right-0 z-20 p-4 sm:p-6 pt-8 sm:pt-10 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/95 to-transparent pointer-events-none">
+        <div className="max-w-2xl mx-auto pointer-events-auto w-full">
           <Button
             variant="default"
             size="lg"
-            className="w-full h-14 text-base sm:text-lg font-bold rounded-2xl shadow-glass flex items-center justify-center gap-2"
+            className="w-full h-12 sm:h-14 lg:h-14 text-base sm:text-lg font-bold rounded-2xl shadow-glass flex items-center justify-center gap-2"
             onClick={onStartWorkout}
           >
             <PlayCircle className="size-5 sm:size-6 shrink-0" />

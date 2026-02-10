@@ -38,17 +38,17 @@ const DailyDiet: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-page-dark pb-20 flex flex-col items-center">
-      <div className="w-full max-w-4xl">
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6">
+    <div className="min-h-screen bg-page-dark pb-20 sm:pb-24 flex flex-col items-center">
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:p-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl mb-1 truncate text-white">Nutrição Diária</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl mb-1 truncate text-white">Nutrição Diária</h1>
             <p className="text-white/70 text-sm sm:text-base">Sua dieta e macros do dia</p>
           </div>
         </div>
 
         {/* Conteúdo */}
-        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
           {/* Seletor de dia (opcional - mantido do layout original) */}
           <div className="flex justify-center gap-2">
             {[
@@ -95,9 +95,9 @@ const DailyDiet: React.FC = () => {
           </Card>
 
           {/* Resumo de Macros */}
-          <Card variant="glass" className="p-4 sm:p-6 border-white/10">
+          <Card variant="glass" className="p-4 sm:p-6 lg:p-6 border-white/10">
             <div className="flex items-end justify-between mb-4 gap-2">
-              <h2 className="text-base sm:text-lg font-bold uppercase tracking-wide text-white">
+              <h2 className="text-base sm:text-lg lg:text-xl font-bold uppercase tracking-wide text-white">
                 Resumo de Macros
               </h2>
               <span className="text-xs text-white/60 font-medium">Meta diária</span>
@@ -110,7 +110,7 @@ const DailyDiet: React.FC = () => {
                 return (
                   <div
                     key={key}
-                    className="bg-white/5 p-3 rounded-xl border border-white/10 flex flex-col gap-2"
+                    className="bg-white/5 p-3 sm:p-4 rounded-xl border border-white/10 flex flex-col gap-2"
                   >
                     <div className="flex justify-between items-center gap-1">
                       <span className="text-[10px] sm:text-xs font-bold text-white/60 tracking-wider">
@@ -200,7 +200,7 @@ const DailyDiet: React.FC = () => {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 glass-card border-0 border-t border-white/10 rounded-none shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
-        <div className="flex justify-around items-center h-14 sm:h-16 max-w-4xl mx-auto px-2 sm:px-4">
+        <div className="flex justify-around items-center h-14 sm:h-16 max-w-4xl mx-auto px-2 sm:px-4 lg:px-6">
           <Button variant="ghost" size="icon" className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 text-white/70 hover:text-white" onClick={() => navigate("/dashboard/student")}>
             <Home className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
             <span className="text-[10px] sm:text-xs truncate">Início</span>

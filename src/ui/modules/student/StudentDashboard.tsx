@@ -50,10 +50,10 @@ export function StudentDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-page-dark pb-20 flex flex-col items-center">
-      <div className="w-full max-w-4xl">
+    <div className="min-h-screen bg-page-dark pb-20 sm:pb-24 flex flex-col items-center">
+      <div className="w-full max-w-4xl mx-auto px-0">
         {/* Header */}
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6">
+        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:p-6">
           <div className="flex items-start justify-between gap-3 mb-4">
             <div className="min-w-0 flex-1">
               <h1 className="text-2xl sm:text-3xl mb-1 truncate text-white">Olá, Atleta! 💪</h1>
@@ -85,11 +85,11 @@ export function StudentDashboard() {
         </div>
 
         {/* Main Content */}
-        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Today's Workout Card */}
         <Card variant="glass" className="overflow-hidden border-white/10 hover:shadow-glass transition-shadow">
           <div
-            className="relative min-h-[200px] sm:min-h-[220px] p-4 sm:p-6 rounded-xl bg-cover bg-center"
+            className="relative min-h-[200px] sm:min-h-[220px] lg:min-h-[240px] p-4 sm:p-6 lg:p-6 rounded-xl bg-cover bg-center"
             style={
               TREINO_HOJE_ILLUSTRATION_URL
                 ? {
@@ -99,13 +99,23 @@ export function StudentDashboard() {
                 : { background: "linear-gradient(135deg, rgba(213,159,57,0.25) 0%, rgba(213,159,57,0.05) 100%)" }
             }
           >
-            {/* Overlay escuro para legibilidade do texto (sem transparência no card) */}
+            {/* Overlay escuro para legibilidade do texto */}
             {TREINO_HOJE_ILLUSTRATION_URL && (
-              <div
-                className="absolute inset-0 rounded-lg"
-                style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.75) 100%)" }}
-                aria-hidden
-              />
+              <>
+                <div
+                  className="absolute inset-0 rounded-lg"
+                  style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.75) 100%)" }}
+                  aria-hidden
+                />
+                {/* Transição suave entre imagem e conteúdo (semi-transparência, sem corte brusco) */}
+                <div
+                  className="absolute inset-x-0 bottom-0 h-24 sm:h-28 rounded-lg pointer-events-none"
+                  style={{
+                    background: "linear-gradient(to bottom, transparent 0%, rgba(15, 20, 22, 0.4) 40%, rgba(15, 20, 22, 0.85) 100%)",
+                  }}
+                  aria-hidden
+                />
+              </>
             )}
             <div className="relative z-10 flex items-start justify-between mb-4 gap-3">
               <div className="min-w-0 flex-1">
@@ -241,7 +251,7 @@ export function StudentDashboard() {
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 glass-card border-0 border-t border-white/10 rounded-none shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
-        <div className="flex justify-around items-center h-14 sm:h-16 max-w-4xl mx-auto px-2 sm:px-4">
+        <div className="flex justify-around items-center h-14 sm:h-16 max-w-4xl mx-auto px-2 sm:px-4 lg:px-6">
           <Button variant="ghost" size="icon" className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0">
             <Home className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
             <span className="text-[10px] sm:text-xs text-primary truncate">Início</span>

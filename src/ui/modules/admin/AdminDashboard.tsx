@@ -168,14 +168,14 @@ export function AdminDashboard() {
       {/* Main Content */}
       <div className="lg:ml-64">
         {/* Header */}
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-6">
+        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl mb-2 text-white">Dashboard Administrativo</h1>
-            <p className="text-white/70">Visão geral da plataforma e métricas</p>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl mb-2 text-white">Dashboard Administrativo</h1>
+            <p className="text-white/70 text-sm sm:text-base">Visão geral da plataforma e métricas</p>
           </div>
         </div>
 
-        <div className="p-6 max-w-7xl mx-auto space-y-6">
+        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 lg:space-y-8">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card variant="glass" className="p-6 border-white/10">

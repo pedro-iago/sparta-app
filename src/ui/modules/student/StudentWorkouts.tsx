@@ -30,16 +30,16 @@ export function StudentWorkouts() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-page-dark pb-20 flex flex-col items-center">
-      <div className="w-full max-w-4xl">
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6">
-          <h1 className="text-2xl sm:text-3xl mb-1 text-white">Treinos</h1>
+    <div className="min-h-screen bg-page-dark pb-20 sm:pb-24 flex flex-col items-center">
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:p-6">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl mb-1 text-white">Treinos</h1>
           <p className="text-white/70 text-sm sm:text-base">Gerencie e inicie seus treinos</p>
         </div>
 
-        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
           <Card variant="glass" className="overflow-hidden border-white/10 hover:shadow-glass transition-shadow">
-            <div className="p-4 sm:p-6">
+            <div className="p-4 sm:p-6 lg:p-6">
               <div className="flex items-start justify-between mb-4 gap-3">
                 <div className="min-w-0 flex-1">
                   <Badge className="bg-primary text-primary-foreground mb-2 text-xs">
@@ -67,9 +67,9 @@ export function StudentWorkouts() {
             </div>
           </Card>
 
-          <Card variant="glass" className="p-4 sm:p-6 border-white/10">
-            <h3 className="text-lg sm:text-xl mb-4 text-white">Todos os treinos</h3>
-            <div className="space-y-3">
+          <Card variant="glass" className="p-4 sm:p-6 lg:p-6 border-white/10">
+            <h3 className="text-lg sm:text-xl lg:text-2xl mb-4 text-white">Todos os treinos</h3>
+            <div className="space-y-3 sm:space-y-4">
               {allWorkouts.map((workout) => (
                 <div
                   key={workout.id}
@@ -106,7 +106,7 @@ export function StudentWorkouts() {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 glass-card border-0 border-t border-white/10 rounded-none shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
-        <div className="flex justify-around items-center h-14 sm:h-16 max-w-4xl mx-auto px-2 sm:px-4">
+        <div className="flex justify-around items-center h-14 sm:h-16 max-w-4xl mx-auto px-2 sm:px-4 lg:px-6">
           <Button variant="ghost" size="icon" className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 text-white/70 hover:text-white" onClick={() => navigate("/dashboard/student")}>
             <Home className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
             <span className="text-[10px] sm:text-xs truncate">Início</span>

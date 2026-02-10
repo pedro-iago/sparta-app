@@ -25,10 +25,16 @@ const InstructorReview: React.FC = () => {
       </header>
 
       <main className="flex-1 overflow-y-auto pb-36 bg-[#171512]">
-        <section className="p-4 border-b border-border-dark bg-[#171512]">
-          <div className="flex items-start gap-4">
-            <div className="relative size-16 shrink-0 rounded-lg overflow-hidden border border-white/10">
+        <section className="p-4 sm:p-6 lg:p-8 border-b border-border-dark bg-[#171512] max-w-4xl mx-auto">
+          <div className="flex items-start gap-4 sm:gap-5">
+            <div className="relative size-14 sm:size-16 shrink-0 rounded-lg overflow-hidden border border-white/10">
               <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: `url('${IMAGES.INSTRUCTOR}')`}}></div>
+              <div
+                className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
+                style={{
+                  background: "linear-gradient(to bottom, transparent 0%, rgba(15, 20, 22, 0.5) 60%, rgba(15, 20, 22, 0.9) 100%)",
+                }}
+              />
             </div>
             <div className="flex flex-col justify-center flex-1 min-w-0">
               <div className="flex justify-between items-start">
@@ -40,7 +46,7 @@ const InstructorReview: React.FC = () => {
           </div>
         </section>
 
-        <div className="px-4 py-6">
+        <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-6 p-3 rounded bg-primary/10 border border-primary/20">
             <span className="material-symbols-outlined text-primary">psychology</span>
             <div>

@@ -58,8 +58,8 @@ export function Login() {
   ];
 
   return (
-    <div className="min-h-screen bg-page-dark flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-4xl">
+    <div className="min-h-screen bg-page-dark flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-4xl mx-auto">
         {/* Logo & Header — hierarquia clara */}
         <div className="text-center mb-10 sm:mb-14">
           <img

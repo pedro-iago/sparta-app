@@ -61,16 +61,16 @@ const MealScan: React.FC = () => {
 
   return (
     <div className="relative flex h-full w-full flex-col bg-background-dark border-x border-[#333] overflow-hidden">
-      <header className="flex items-center justify-between p-4 pb-2 bg-background-dark z-10">
-        <button onClick={() => navigate('/diet')} className="text-white flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-white/5 transition-colors"><span className="material-symbols-outlined text-2xl">arrow_back</span></button>
-        <h1 className="text-white text-base font-bold tracking-wider uppercase flex-1 text-center text-opacity-90">Registro IA</h1>
-        <button className="flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-white/5 transition-colors"><span className="material-symbols-outlined text-2xl">settings</span></button>
+      <header className="flex items-center justify-between p-4 sm:p-6 pb-2 bg-background-dark z-10 max-w-4xl mx-auto w-full">
+        <button onClick={() => navigate('/diet')} className="text-white flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-full hover:bg-white/5 transition-colors"><span className="material-symbols-outlined text-xl sm:text-2xl">arrow_back</span></button>
+        <h1 className="text-white text-sm sm:text-base font-bold tracking-wider uppercase flex-1 text-center text-opacity-90">Registro IA</h1>
+        <button className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-full hover:bg-white/5 transition-colors"><span className="material-symbols-outlined text-xl sm:text-2xl">settings</span></button>
       </header>
 
-      <main className="flex-1 flex flex-col gap-6 px-4 pt-2 pb-24 overflow-y-auto no-scrollbar">
+      <main className="flex-1 flex flex-col gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 pt-2 pb-24 overflow-y-auto no-scrollbar max-w-4xl mx-auto w-full">
         <div className="flex flex-col gap-1">
           <div className="flex justify-between items-baseline">
-            <h2 className="text-white text-3xl font-bold tracking-tight uppercase">Refeição <span className="text-primary text-xl align-top">A.I.</span></h2>
+            <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight uppercase">Refeição <span className="text-primary text-lg sm:text-xl align-top">A.I.</span></h2>
             <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-[#333] border border-[#444]">
               <div className={`w-2 h-2 rounded-full ${analyzing ? 'bg-yellow-500 animate-bounce' : 'bg-green-500 animate-pulse'}`}></div>
               <span className="text-[10px] font-bold tracking-widest uppercase text-gray-300">{analyzing ? 'Analisando...' : 'Online'}</span>
@@ -85,8 +85,14 @@ const MealScan: React.FC = () => {
           ) : (
             <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{backgroundImage: `url('${IMAGES.MEAL_PLACEHOLDER}')`}}></div>
           )}
-          
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+          {/* Transição suave entre imagem e botão (semi-transparência, sem corte brusco) */}
+          <div
+            className="absolute inset-x-0 bottom-0 h-24 sm:h-28 pointer-events-none"
+            style={{
+              background: "linear-gradient(to bottom, transparent 0%, rgba(15, 20, 22, 0.4) 40%, rgba(15, 20, 22, 0.85) 100%)",
+            }}
+          />
           
           <div className="absolute inset-0 p-4 flex flex-col justify-between pointer-events-none">
             <div className="flex justify-between"><div className="w-8 h-8 border-l-2 border-t-2 border-primary/70 rounded-tl-lg"></div><div className="w-8 h-8 border-r-2 border-t-2 border-primary/70 rounded-tr-lg"></div></div>
@@ -94,10 +100,10 @@ const MealScan: React.FC = () => {
             <div className="flex justify-between items-end"><div className="w-8 h-8 border-l-2 border-b-2 border-primary/70 rounded-bl-lg"></div><div className="w-8 h-8 border-r-2 border-b-2 border-primary/70 rounded-br-lg"></div></div>
           </div>
           
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-8 pointer-events-auto">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-md mx-auto px-4 sm:px-8 pointer-events-auto">
             <button 
               onClick={() => fileInputRef.current?.click()}
-              className="w-full bg-primary/90 hover:bg-primary backdrop-blur-sm text-black font-bold h-10 rounded-lg flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(213,159,57,0.3)] transition-all transform active:scale-95 text-sm"
+              className="w-full bg-primary/90 hover:bg-primary backdrop-blur-sm text-black font-bold h-10 sm:h-12 rounded-lg flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(213,159,57,0.3)] transition-all transform active:scale-95 text-sm sm:text-base"
             >
               <span className="material-symbols-outlined text-lg">photo_camera</span>
               {imagePreview ? 'RE-ESCANEAR PRATO' : 'CAPTURAR REFEIÇÃO'}

@@ -216,7 +216,7 @@ export function ProfessionalStudents() {
 
       {/* Main Content */}
       <div className={sidebarCollapsed ? "lg:ml-20" : "lg:ml-64"} style={{ transition: "margin-left 0.2s" }}>
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6">
+        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:px-8">
           <div className="max-w-7xl mx-auto flex items-center sm:items-start justify-between gap-4">
             <button
               type="button"

@@ -22,10 +22,10 @@ export function WorkoutHeader({ title, elapsedSeconds }: WorkoutHeaderProps) {
   const timeStr = `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 text-white/80">
-      <span className="text-sm font-medium uppercase tracking-wider">{title}</span>
+    <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4 max-w-4xl mx-auto w-full">
+      <span className="text-sm sm:text-base font-medium uppercase tracking-wider truncate mr-2">{title}</span>
       {elapsedSeconds != null && (
-        <span className="text-sm font-mono tabular-nums">{timeStr}</span>
+        <span className="text-sm sm:text-base font-mono tabular-nums shrink-0">{timeStr}</span>
       )}
     </header>
   );
@@ -39,8 +39,7 @@ interface ExerciseHeroProps {
 export function ExerciseHero({ imageUrl, alt = "" }: ExerciseHeroProps) {
   return (
     <div
-      className="relative w-full aspect-[4/3] max-h-[70vh] shrink-0 overflow-hidden bg-black/40"
-      style={{ minHeight: "40vh" }}
+      className="relative w-full aspect-[4/3] sm:aspect-video min-h-[40vh] max-h-[55vh] sm:max-h-[65vh] lg:max-h-[70vh] shrink-0 overflow-hidden bg-black/40 max-w-4xl mx-auto"
     >
       <img
         src={imageUrl}
@@ -68,8 +67,8 @@ interface ExerciseTitleProps {
 export function ExerciseTitle({ reps, exerciseName }: ExerciseTitleProps) {
   const nameUpper = exerciseName.replace(/\s+/g, " ").toUpperCase();
   return (
-    <div className="px-4 py-6 text-center">
-      <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight uppercase leading-tight">
+    <div className="px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8 text-center max-w-4xl mx-auto">
+      <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight uppercase leading-tight break-words">
         {reps} <span className="text-primary">{nameUpper}</span>
       </p>
     </div>
@@ -90,11 +89,11 @@ export function PrimaryActionButton({
 }: PrimaryActionButtonProps) {
   const isDone = variant === "done";
   return (
-    <div className="px-4 pb-4">
+    <div className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 max-w-4xl mx-auto w-full">
       <button
         type="button"
         onClick={onClick}
-        className={`w-full py-4 rounded-2xl font-bold text-lg uppercase tracking-wide transition-all active:scale-[0.98] ${
+        className={`w-full py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg uppercase tracking-wide transition-all active:scale-[0.98] ${
           isDone
             ? "bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg"
             : "bg-primary hover:bg-primary/90 text-[#171512]"
@@ -113,9 +112,9 @@ interface NextExerciseItemProps {
 
 export function NextExerciseItem({ name, reps }: NextExerciseItemProps) {
   return (
-    <div className="flex items-center justify-between py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-left">
-      <span className="text-white font-medium truncate">{name}</span>
-      <span className="text-white/60 text-sm shrink-0 ml-2">{reps} reps</span>
+    <div className="flex items-center justify-between py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl bg-white/5 border border-white/10 text-left">
+      <span className="text-white font-medium text-sm sm:text-base truncate">{name}</span>
+      <span className="text-white/60 text-xs sm:text-sm shrink-0 ml-2">{reps} reps</span>
     </div>
   );
 }
@@ -128,11 +127,11 @@ export function NextExercisesList({ exercises }: NextExercisesListProps) {
   if (exercises.length === 0) return null;
 
   return (
-    <div className="px-4 pb-8 space-y-2">
-      <h3 className="text-xs font-bold uppercase tracking-wider text-white/60 mb-3">
+    <div className="px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10 space-y-2 max-w-4xl mx-auto w-full">
+      <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white/60 mb-3">
         Próximos exercícios
       </h3>
-      <div className="space-y-2">
+      <div className="space-y-2 sm:space-y-3">
         {exercises.map((item, i) => (
           <NextExerciseItem key={i} name={item.name} reps={item.reps} />
         ))}

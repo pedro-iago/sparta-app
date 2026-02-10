@@ -210,7 +210,7 @@ export function TrainerDashboard() {
       {/* Main Content */}
       <div className={sidebarCollapsed ? "lg:ml-20" : "lg:ml-64"} style={{ transition: "margin-left 0.2s" }}>
         {/* Header */}
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6">
+        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:px-8">
           <div className="max-w-7xl mx-auto flex items-center gap-4">
             <button
               type="button"
@@ -228,8 +228,8 @@ export function TrainerDashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="p-6 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 lg:mb-8">
             <Card variant="glass" className="p-6 border-white/10">
               <div className="flex items-center justify-between">
                 <div>
