@@ -221,7 +221,7 @@ export function StudentDashboard() {
       </div>
 
       {/* Bottom Navigation - alinhado ao container em telas grandes */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#171717] border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.4)]">
         <div className="flex justify-around items-center h-14 sm:h-16 max-w-4xl mx-auto px-2 sm:px-4">
           <Button variant="ghost" size="icon" className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0">
             <Home className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
