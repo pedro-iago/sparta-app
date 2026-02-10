@@ -12,6 +12,8 @@ import {
   ThumbsUp,
   Sparkles,
   LogOut,
+  List,
+  LayoutGrid,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 
@@ -29,6 +31,7 @@ interface WorkoutReview {
 export function TrainerDashboard() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<"all" | "draft" | "pending" | "active">("all");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   const floatingNavItems: FloatingNavItem[] = [
     { icon: <FileText />, label: "Revisões", onClick: () => {} },
@@ -114,121 +117,173 @@ export function TrainerDashboard() {
       {/* Main Content - full width */}
       <div className="w-full">
         {/* Header */}
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
+        <div className="glass-card-3d border-0 border-b border-white/10 rounded-none rounded-b-2xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+          <div className="max-w-5xl mx-auto">
             <h1 className="text-xl sm:text-2xl font-semibold mb-0.5 text-white tracking-tight">Dashboard do Personal</h1>
             <p className="text-white/50 text-sm">Gerencie treinos e acompanhe seus alunos</p>
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 lg:p-8 pb-24 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 lg:mb-8">
-            <div className="glass-card-3d rounded-2xl p-4 sm:p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-white/50 mb-0.5">Total de alunos</p>
-                  <p className="text-2xl font-semibold text-white/95 tabular-nums">{stats.totalStudents}</p>
+        <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 pb-24 max-w-5xl mx-auto">
+          {/* Cards de estatísticas — em mobile 3 colunas compactas, em desktop 3 colunas confortáveis */}
+          <section className="grid grid-cols-3 gap-2 sm:gap-4 mb-5 sm:mb-8" aria-label="Resumo">
+            <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-medium text-white/50 truncate">Alunos</p>
+                  <p className="text-lg sm:text-2xl font-semibold text-white/95 tabular-nums">{stats.totalStudents}</p>
                 </div>
-                <div className="bg-white/[0.08] p-2.5 rounded-full">
+                <div className="hidden sm:block bg-white/[0.08] p-2 rounded-full shrink-0">
                   <Users className="size-5 text-primary/70" />
                 </div>
               </div>
             </div>
-            <div className="glass-card-3d rounded-2xl p-4 sm:p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-white/50 mb-0.5">Revisões pendentes</p>
-                  <p className="text-2xl font-semibold text-primary/90 tabular-nums">{stats.pendingReviews}</p>
+            <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-medium text-white/50 truncate">Pendentes</p>
+                  <p className="text-lg sm:text-2xl font-semibold text-primary/90 tabular-nums">{stats.pendingReviews}</p>
                 </div>
-                <div className="bg-white/[0.08] p-2.5 rounded-full">
+                <div className="hidden sm:block bg-white/[0.08] p-2 rounded-full shrink-0">
                   <Clock className="size-5 text-primary/70" />
                 </div>
               </div>
             </div>
-            <div className="glass-card-3d rounded-2xl p-4 sm:p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-white/50 mb-0.5">Treinos ativos</p>
-                  <p className="text-2xl font-semibold text-white/95 tabular-nums">{stats.activeWorkouts}</p>
+            <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-medium text-white/50 truncate">Ativos</p>
+                  <p className="text-lg sm:text-2xl font-semibold text-white/95 tabular-nums">{stats.activeWorkouts}</p>
                 </div>
-                <div className="bg-white/[0.08] p-2.5 rounded-full">
+                <div className="hidden sm:block bg-white/[0.08] p-2 rounded-full shrink-0">
                   <CheckCircle className="size-5 text-primary/70" />
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Filters and Search */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/45" />
-              <Input
-                placeholder="Buscar por aluno ou treino..."
-                className="pl-10 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 rounded-xl"
-              />
+          {/* Busca e filtros — em mobile empilhados, em desktop na mesma linha */}
+          <section className="mb-4 sm:mb-6" aria-label="Filtrar revisões">
+            <div className="glass-card-3d rounded-2xl p-3 sm:p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex-1 w-full min-w-0 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/45 pointer-events-none" />
+                <Input
+                  placeholder="Buscar aluno ou treino..."
+                  className="w-full pl-9 sm:pl-10 h-10 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 rounded-xl text-sm"
+                />
+              </div>
+              <div className="flex flex-wrap gap-1.5 sm:flex-nowrap">
+                {(["all", "draft", "pending", "active"] as const).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => setFilter(f)}
+                    className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-colors shrink-0 ${
+                      filter === f
+                        ? "bg-primary/80 text-primary-foreground"
+                        : "bg-white/[0.06] text-white/60 hover:text-white/80 border border-white/[0.06]"
+                    }`}
+                  >
+                    {f === "all" ? "Todos" : f === "draft" ? "Draft" : f === "pending" ? "Pendentes" : "Ativos"}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-1.5">
-              {(["all", "draft", "pending", "active"] as const).map((f) => (
+          </section>
+
+          {/* Lista de revisões */}
+          <section aria-label="Revisões para aprovar">
+            <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4">
+              <h2 className="text-sm font-medium text-white/70">
+                Revisões <span className="text-white/50 font-normal">({filteredReviews.length})</span>
+              </h2>
+              <div className="glass-card-3d rounded-xl p-0.5" role="group" aria-label="Visualização">
                 <button
-                  key={f}
                   type="button"
-                  onClick={() => setFilter(f)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                    filter === f
+                  onClick={() => setViewMode("list")}
+                  className={`p-1.5 sm:p-2 rounded-md transition-colors ${
+                    viewMode === "list"
                       ? "bg-primary/80 text-primary-foreground"
-                      : "bg-white/[0.06] text-white/60 hover:text-white/80 border border-white/[0.06]"
+                      : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
                   }`}
+                  title="Lista"
+                  aria-pressed={viewMode === "list"}
                 >
-                  {f === "all" ? "Todos" : f === "draft" ? "Draft" : f === "pending" ? "Pendentes" : "Ativos"}
+                  <List className="size-4 sm:size-4.5" />
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("grid")}
+                  className={`p-1.5 sm:p-2 rounded-md transition-colors ${
+                    viewMode === "grid"
+                      ? "bg-primary/80 text-primary-foreground"
+                      : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
+                  }`}
+                  title="Quadros"
+                  aria-pressed={viewMode === "grid"}
+                >
+                  <LayoutGrid className="size-4 sm:size-4.5" />
+                </button>
+              </div>
+            </div>
+            <div
+              className={
+                viewMode === "list"
+                  ? "space-y-2 sm:space-y-3"
+                  : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
+              }
+            >
+              {filteredReviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5 flex flex-col h-full"
+                >
+                  <div className="flex flex-col gap-3 sm:gap-0 sm:flex-row sm:items-start sm:justify-between flex-shrink-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="bg-white/[0.08] rounded-full size-9 sm:size-10 flex items-center justify-center shrink-0">
+                        <span className="text-xs sm:text-sm font-semibold text-primary/80">{review.studentAvatar}</span>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-medium text-white/95 truncate text-sm sm:text-base">{review.studentName}</h3>
+                        <p className="text-[10px] sm:text-[11px] text-white/45">{review.createdAt}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between sm:justify-end gap-2">
+                      {getStatusLabel(review.status)}
+                    </div>
+                  </div>
+                  <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-white/[0.06] flex-1 min-h-0">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                      <Sparkles className="size-3.5 text-primary/60 shrink-0" />
+                      <h4 className="font-medium text-white/90 text-xs sm:text-sm truncate">{review.workoutName}</h4>
+                      <span className="text-[10px] font-medium text-white/45">IA</span>
+                    </div>
+                    <p className="text-[11px] sm:text-xs text-white/55 line-clamp-2">{review.description}</p>
+                  </div>
+                  <div className="mt-3 flex flex-row gap-2 flex-shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="flex-1 text-white/70 hover:text-white hover:bg-white/[0.06] h-9 sm:h-8 text-xs sm:text-sm"
+                      onClick={() => navigate("/trainer/edit-workout")}
+                    >
+                      <Eye className="mr-2 size-3.5 shrink-0" />
+                      Revisar
+                    </Button>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="flex-1 rounded-xl font-medium h-9 sm:h-8 text-xs sm:text-sm"
+                      onClick={() => navigate("/trainer/edit-workout")}
+                    >
+                      <ThumbsUp className="mr-2 size-3.5 shrink-0" />
+                      Aprovar
+                    </Button>
+                  </div>
+                </div>
               ))}
             </div>
-          </div>
-
-          <div className="space-y-3">
-            {filteredReviews.map((review) => (
-              <div
-                key={review.id}
-                className="glass-card-3d rounded-2xl p-4 sm:p-5"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-white/[0.08] rounded-full size-10 flex items-center justify-center">
-                      <span className="text-sm font-semibold text-primary/80">{review.studentAvatar}</span>
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-white/95">{review.studentName}</h3>
-                      <p className="text-[11px] text-white/45">{review.createdAt}</p>
-                    </div>
-                  </div>
-                  {getStatusLabel(review.status)}
-                </div>
-                <div className="mb-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Sparkles className="size-3.5 text-primary/60" />
-                    <h4 className="font-medium text-white/90 text-sm">{review.workoutName}</h4>
-                    <span className="text-[10px] font-medium text-white/45">Gerado por IA</span>
-                  </div>
-                  <p className="text-xs text-white/55">{review.description}</p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex-1 text-white/70 hover:text-white hover:bg-white/[0.06]"
-                    onClick={() => navigate("/trainer/edit-workout")}
-                  >
-                    <Eye className="mr-2 size-3.5" />
-                    Revisar
-                  </Button>
-                  <Button variant="default" size="sm" className="flex-1 rounded-xl font-medium" onClick={() => navigate("/trainer/edit-workout")}>
-                    <ThumbsUp className="mr-2 size-3.5" />
-                    Aprovar
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+          </section>
         </div>
       </div>
 
