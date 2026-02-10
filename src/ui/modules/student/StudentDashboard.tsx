@@ -12,7 +12,8 @@ import {
   Trophy,
   Home,
   Calendar,
-  User
+  User,
+  LogOut
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { TREINO_HOJE_ILLUSTRATION_URL } from "@/shared/constants/images";
@@ -42,15 +43,32 @@ export function StudentDashboard() {
     { name: "Cardio HIIT", date: "3 dias atrás", completed: true },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("@sparta:user");
+    navigate("/login", { replace: true });
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20 flex flex-col items-center">
       {/* Container responsivo: centralizado em monitores, full width em mobile */}
       <div className="w-full max-w-4xl">
-        {/* Header - sem botão perfil (já existe na navegação inferior) */}
+        {/* Header - botão Sair no canto superior direito */}
         <div className="bg-card border-b border-border p-4 sm:p-6">
-          <div className="mb-4">
-            <h1 className="text-2xl sm:text-3xl mb-1 truncate">Olá, Atleta! 💪</h1>
-            <p className="text-muted-foreground text-sm sm:text-base">Vamos dominar o dia</p>
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl sm:text-3xl mb-1 truncate">Olá, Atleta! 💪</h1>
+              <p className="text-muted-foreground text-sm sm:text-base">Vamos dominar o dia</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="shrink-0 text-muted-foreground hover:text-foreground"
+              title="Sair"
+            >
+              <LogOut className="h-5 w-5 sm:h-6 sm:w-6" />
+            </Button>
           </div>
           
           {/* Streak Counter */}
