@@ -140,25 +140,28 @@ export function TrainerDashboard() {
           mobileMenuOpen ? "w-64 p-6" : sidebarCollapsed ? "w-20 p-3" : "w-64 p-6"
         } ${mobileMenuOpen ? "flex" : "hidden lg:flex"}`}
       >
-        <div className={`mb-6 flex items-start gap-1 ${sidebarCollapsed ? "flex-col items-center" : ""}`}>
-          {sidebarCollapsed ? (
-            <span className="text-lg font-bold text-primary">S</span>
-          ) : (
-            <>
-              <div className="flex items-center gap-2 min-w-0">
-                <h1 className="text-2xl text-primary truncate">SPARTA AI</h1>
-                <button
-                  type="button"
-                  onClick={toggleSidebar}
-                  title="Minimizar menu"
-                  className="shrink-0 p-1.5 rounded-md opacity-50 hover:opacity-80 bg-black/10 hover:bg-black/20 transition-opacity"
-                  aria-label="Minimizar menu"
-                >
-                  <PanelLeftClose className="h-4 w-4 text-muted-foreground" />
-                </button>
-              </div>
-            </>
-          )}
+        {/* Header: logo à esquerda, seta à direita (mesmo lugar minimizada ou não) */}
+        <div className="flex items-center justify-between w-full mb-6 min-h-10">
+          <div className="min-w-0 flex-1 flex items-center">
+            {sidebarCollapsed ? (
+              <span className="text-lg font-bold text-primary">S</span>
+            ) : (
+              <h1 className="text-2xl text-primary truncate">SPARTA AI</h1>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            title={sidebarCollapsed ? "Expandir menu" : "Minimizar menu"}
+            className="shrink-0 p-1.5 rounded-md opacity-50 hover:opacity-80 bg-black/10 hover:bg-black/20 transition-opacity"
+            aria-label={sidebarCollapsed ? "Expandir menu" : "Minimizar menu"}
+          >
+            {sidebarCollapsed ? (
+              <PanelLeftOpen className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <PanelLeftClose className="h-4 w-4 text-muted-foreground" />
+            )}
+          </button>
         </div>
 
         <nav className="space-y-2 flex-1">
@@ -191,17 +194,6 @@ export function TrainerDashboard() {
         </nav>
 
         <div className={sidebarCollapsed ? "flex flex-col items-center gap-2" : "space-y-0"}>
-          {sidebarCollapsed && (
-            <button
-              type="button"
-              onClick={toggleSidebar}
-              title="Expandir menu"
-              className="p-2 rounded-md opacity-50 hover:opacity-80 bg-black/10 hover:bg-black/20 transition-opacity"
-              aria-label="Expandir menu"
-            >
-              <PanelLeftOpen className="h-5 w-5 text-muted-foreground" />
-            </button>
-          )}
           <Button
             variant="ghost"
             size={sidebarCollapsed ? "icon" : "default"}
