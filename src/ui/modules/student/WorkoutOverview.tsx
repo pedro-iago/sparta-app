@@ -8,17 +8,17 @@ import { IMAGES } from "@/shared/constants/images";
 import type { Workout, Exercise } from "@/shared/types";
 import { MuscleGroup } from "@/shared/types";
 
-/** Dados exibidos na tela (apenas apresentação). Calorias opcional se vier da API no futuro. */
+/** Dados exibidos na tela (apenas apresentação). Calorias quando vier da API no futuro. */
 export interface WorkoutOverviewData {
   workout: Workout;
-  /** Calorias estimadas (opcional; se não informado, exibe "—") */
+  /** Calorias estimadas */
   caloriesEstimated?: number;
   /** URL do avatar do instrutor ou indicador de contexto (opcional) */
   instructorAvatarUrl?: string;
 }
 
-/** Treino de demonstração quando o contexto ainda não tem currentWorkout (ex.: após login sem API). */
-const DEMO_WORKOUT: Workout = {
+/** Treino de demonstração quando o contexto ainda não tem currentWorkout (ex.: após login sem API). Exportado para ActiveWorkout. */
+export const DEMO_WORKOUT: Workout = {
   id: "demo-1",
   name: "Full body workout",
   focalMuscles: "Corpo completo",
@@ -221,8 +221,8 @@ const WorkoutOverview: React.FC = () => {
       workout={workout}
       instructorAvatarUrl={IMAGES.INSTRUCTOR}
       onBack={() => navigate(-1)}
-      onStartWorkout={() => navigate("/active-workout")}
-      onExerciseClick={() => navigate("/active-workout")}
+      onStartWorkout={() => navigate("/active-workout", { state: { workout, startTimer: true } })}
+      onExerciseClick={(_, index) => navigate("/active-workout", { state: { workout, startAt: index, startTimer: true } })}
     />
   );
 };

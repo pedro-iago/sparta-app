@@ -9,6 +9,7 @@ import { Login } from './ui/modules/auth/Login';
 import { StudentDashboard } from './ui/modules/student/StudentDashboard';
 import { StudentWorkouts } from './ui/modules/student/StudentWorkouts';
 import WorkoutOverview from './ui/modules/student/WorkoutOverview';
+import ActiveWorkout from './ui/modules/student/ActiveWorkout';
 import DailyDiet from './ui/modules/student/DailyDiet';
 import { StudentProfile } from './ui/modules/student/StudentProfile';
 
@@ -54,6 +55,11 @@ const App: React.FC = () => {
           <Route path="/workout-overview" element={
             <PrivateRoute allowedRole="STUDENT">
               <WorkoutOverview />
+            </PrivateRoute>
+          } />
+          <Route path="/active-workout" element={
+            <PrivateRoute allowedRole="STUDENT">
+              <ActiveWorkout />
             </PrivateRoute>
           } />
           <Route path="/diet" element={
