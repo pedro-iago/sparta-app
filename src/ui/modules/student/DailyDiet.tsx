@@ -1,9 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSparta } from "@/shared/context/SpartaContext";
-import { Card } from "@/ui/components/ui/card";
 import { Button } from "@/ui/components/ui/button";
-import { Badge } from "@/ui/components/ui/badge";
 import { Progress } from "@/ui/components/ui/progress";
 import {
   Home,
@@ -75,34 +73,30 @@ const DailyDiet: React.FC = () => {
           </div>
 
           {/* Certificado Digital / Plano IA */}
-          <Card variant="glass" className="border-white/10 overflow-hidden">
-            <div className="p-4 flex items-start gap-4">
-              <div className="flex flex-col gap-1 border-r border-primary/20 pr-4 items-center justify-center shrink-0">
-                <Bot className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
-                <span className="text-[10px] text-primary font-bold uppercase tracking-wider">
-                  A.I.
-                </span>
+          <div className="rounded-2xl p-4 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] backdrop-blur-sm">
+            <div className="flex items-start gap-4">
+              <div className="flex flex-col gap-0.5 border-r border-white/10 pr-4 items-center justify-center shrink-0">
+                <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-primary/80" />
+                <span className="text-[10px] font-medium text-primary/70 tracking-wider">A.I.</span>
               </div>
               <div className="min-w-0 flex-1">
-                <Badge className="bg-primary/20 text-primary border-primary/30 text-xs mb-2">
-                  Certificado Digital
-                </Badge>
-                <p className="text-sm text-white/90">
+                <p className="text-[11px] font-medium text-primary/70 mb-0.5">Certificado Digital</p>
+                <p className="text-sm text-white/85">
                   Plano sugerido por Inteligência Artificial
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* Resumo de Macros */}
-          <Card variant="glass" className="p-4 sm:p-6 lg:p-6 border-white/10">
-            <div className="flex items-end justify-between mb-4 gap-2">
-              <h2 className="text-base sm:text-lg lg:text-xl font-bold uppercase tracking-wide text-white">
+          <div className="rounded-2xl p-4 sm:p-5 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] backdrop-blur-sm">
+            <div className="flex items-end justify-between mb-3 gap-2">
+              <h2 className="text-sm font-medium text-white/90 tracking-tight">
                 Resumo de Macros
               </h2>
-              <span className="text-xs text-white/60 font-medium">Meta diária</span>
+              <span className="text-[11px] text-white/45">Meta diária</span>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
               {macros.map(({ label, key }) => {
                 const val = totals[key];
                 const target = targets[key];
@@ -110,81 +104,76 @@ const DailyDiet: React.FC = () => {
                 return (
                   <div
                     key={key}
-                    className="bg-white/5 p-3 sm:p-4 rounded-xl border border-white/10 flex flex-col gap-2"
+                    className="bg-white/[0.04] p-2.5 sm:p-3 rounded-lg flex flex-col gap-1.5"
                   >
                     <div className="flex justify-between items-center gap-1">
-                      <span className="text-[10px] sm:text-xs font-bold text-white/60 tracking-wider">
+                      <span className="text-[10px] font-medium text-white/50 tracking-wider">
                         {label}
                       </span>
-                      <span className="text-[10px] sm:text-xs text-primary font-bold shrink-0">
+                      <span className="text-[10px] font-medium text-primary/70 shrink-0">
                         {pct}%
                       </span>
                     </div>
-                    <Progress value={pct} className="h-1.5 bg-muted" />
-                    <p className="text-xs text-white/90 font-medium">
-                      {val}g <span className="text-white/60">/ {target}g</span>
+                    <Progress value={pct} className="h-1 bg-white/10 [&>div]:bg-primary/70" />
+                    <p className="text-[11px] text-white/80 font-medium">
+                      {val}g <span className="text-white/45">/ {target}g</span>
                     </p>
                   </div>
                 );
               })}
             </div>
-          </Card>
+          </div>
 
           {/* Lista de refeições */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             {meals.length > 0 ? (
               meals.map((meal, index) => (
-                <Card
+                <div
                   key={meal.id || index}
-                  variant="glass"
-                  className="border-l-4 border-l-primary border-white/10 overflow-hidden"
+                  className="rounded-2xl p-4 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] border-l-2 border-l-primary/40"
                 >
-                  <div className="p-4 flex flex-col gap-3">
+                  <div className="flex flex-col gap-2">
                     <div className="flex justify-between items-start gap-3">
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-sm sm:text-base font-bold uppercase tracking-wider flex items-center gap-2 flex-wrap">
-                          {meal.name}
-                          <Badge
-                            variant="secondary"
-                            className="text-xs font-normal bg-muted"
-                          >
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="text-sm font-semibold text-white/95 tracking-tight">
+                            {meal.name}
+                          </h3>
+                          <span className="text-[10px] text-white/45 font-medium">
                             {meal.time}
-                          </Badge>
-                        </h3>
-                        <p className="text-xs text-primary mt-1 font-medium">
-                          {meal.calories} Kcal •{" "}
-                          {meal.completed ? "Meta atingida" : "Pendente"}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-primary/80 mt-0.5">
+                          {meal.calories} kcal · {meal.completed ? "Meta atingida" : "Pendente"}
                         </p>
                       </div>
                       <div
-                        className={`shrink-0 size-5 rounded border flex items-center justify-center ${
+                        className={`shrink-0 size-4 rounded-full flex items-center justify-center ${
                           meal.completed
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-muted-foreground/30"
+                            ? "bg-primary/70 text-white"
+                            : "bg-white/10 border border-white/20"
                         }`}
                       >
                         {meal.completed && (
-                          <CheckCircle2 className="h-3 w-3" />
+                          <CheckCircle2 className="h-2.5 w-2.5" />
                         )}
                       </div>
                     </div>
-                    <div className="h-px bg-border w-full" />
                     <p
-                      className={`text-xs sm:text-sm ${
+                      className={`text-[11px] ${
                         meal.completed
-                          ? "text-muted-foreground line-through"
-                          : "text-foreground"
+                          ? "text-white/40 line-through"
+                          : "text-white/60"
                       }`}
                     >
-                      {meal.protein}g Prot • {meal.carbs}g Carb • {meal.fat}g
-                      Gord
+                      {meal.protein}g prot · {meal.carbs}g carb · {meal.fat}g gordura
                     </p>
                   </div>
-                </Card>
+                </div>
               ))
             ) : (
-              <Card variant="glass" className="p-6 text-center border-white/10">
-                <p className="text-sm text-white/70">
+              <div className="rounded-2xl p-6 text-center bg-white/[0.06] border border-white/[0.06]">
+                <p className="text-sm text-white/50">
                   Nenhuma refeição registrada hoje. Registre sua primeira
                   refeição abaixo.
                 </p>
@@ -192,9 +181,9 @@ const DailyDiet: React.FC = () => {
             )}
           </div>
 
-          <Button variant="default" size="lg" className="w-full font-bold uppercase tracking-wide" onClick={() => navigate("/meal-scan")}>
-            <PlusCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            Registrar Refeição
+          <Button variant="default" size="lg" className="w-full rounded-xl font-medium" onClick={() => navigate("/meal-scan")}>
+            <PlusCircle className="mr-2 size-4" />
+            Registrar refeição
           </Button>
         </div>
       </div>

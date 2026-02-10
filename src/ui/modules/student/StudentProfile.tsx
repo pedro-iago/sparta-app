@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router";
 import { useSparta } from "@/shared/context/SpartaContext";
-import { Card } from "@/ui/components/ui/card";
 import { Button } from "@/ui/components/ui/button";
-import { Badge } from "@/ui/components/ui/badge";
 import {
   Home,
   Dumbbell,
@@ -41,63 +39,61 @@ export function StudentProfile() {
       <div className="w-full max-w-4xl mx-auto">
         <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:p-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl mb-1 truncate text-white">Meu Perfil</h1>
-            <p className="text-white/70 text-sm sm:text-base">Seus dados e preferências</p>
+            <h1 className="text-xl sm:text-2xl font-semibold mb-0.5 truncate text-white tracking-tight">Meu perfil</h1>
+            <p className="text-white/50 text-sm">Seus dados e preferências</p>
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
-          <Card variant="glass" className="p-4 sm:p-6 lg:p-6 border-white/10">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="bg-primary/20 p-3 rounded-full shrink-0">
-                <User className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+        <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-5">
+          <div className="rounded-2xl p-4 sm:p-5 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] backdrop-blur-sm">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-white/[0.08] p-2.5 rounded-full shrink-0">
+                <User className="h-7 w-7 sm:h-8 sm:w-8 text-primary/80" />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="text-lg sm:text-xl font-bold truncate text-white">
+                <h2 className="text-base sm:text-lg font-semibold truncate text-white/95 tracking-tight">
                   {displayName}
                 </h2>
-                <Badge variant="secondary" className="mt-1 text-xs">
-                  Aluno
-                </Badge>
+                <p className="text-[11px] font-medium text-white/50 mt-0.5">Aluno</p>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between py-3 border-b border-white/10">
-                <span className="text-sm text-white/60 flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary shrink-0" />
+            <div className="space-y-0 border-t border-white/[0.06] pt-3">
+              <div className="flex items-center justify-between py-2.5">
+                <span className="text-sm text-white/50 flex items-center gap-2">
+                  <TrendingUp className="size-3.5 text-primary/60 shrink-0" />
                   Nível
                 </span>
-                <span className="text-sm font-medium text-white">{levelLabel}</span>
+                <span className="text-sm font-medium text-white/90">{levelLabel}</span>
               </div>
-              <div className="flex items-center justify-between py-3 border-b border-white/10">
-                <span className="text-sm text-white/60 flex items-center gap-2">
-                  <Target className="h-4 w-4 text-primary shrink-0" />
+              <div className="flex items-center justify-between py-2.5 border-t border-white/[0.04]">
+                <span className="text-sm text-white/50 flex items-center gap-2">
+                  <Target className="size-3.5 text-primary/60 shrink-0" />
                   Objetivo
                 </span>
-                <span className="text-sm font-medium text-white">{goalLabel}</span>
+                <span className="text-sm font-medium text-white/90">{goalLabel}</span>
               </div>
-              <div className="flex items-center justify-between py-3">
-                <span className="text-sm text-white/60 flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary shrink-0" />
+              <div className="flex items-center justify-between py-2.5 border-t border-white/[0.04]">
+                <span className="text-sm text-white/50 flex items-center gap-2">
+                  <Calendar className="size-3.5 text-primary/60 shrink-0" />
                   Treinos por semana
                 </span>
-                <span className="text-sm font-medium text-white">{frequency}x</span>
+                <span className="text-sm font-medium text-white/90">{frequency}x</span>
               </div>
             </div>
-          </Card>
+          </div>
 
-          <Card variant="glass" className="p-4 sm:p-6 lg:p-6 border-white/10">
-            <h3 className="text-base sm:text-lg font-bold mb-4 text-white">Conta</h3>
+          <div className="rounded-2xl p-4 sm:p-5 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-white/90 tracking-tight mb-3">Conta</h3>
             <Button
-              variant="outline"
-              className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive"
+              variant="ghost"
+              className="w-full justify-start gap-2 text-white/70 hover:text-white hover:bg-white/[0.06] rounded-lg"
               onClick={handleLogout}
             >
-              <LogOut className="h-4 w-4 shrink-0" />
+              <LogOut className="size-4 shrink-0" />
               Sair da conta
             </Button>
-          </Card>
+          </div>
         </div>
       </div>
 

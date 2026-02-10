@@ -1,6 +1,4 @@
-import { Card } from "@/ui/components/ui/card";
 import { Button } from "@/ui/components/ui/button";
-import { Badge } from "@/ui/components/ui/badge";
 import {
   Dumbbell,
   PlayCircle,
@@ -38,61 +36,54 @@ export function StudentWorkouts() {
         </div>
 
         <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
-          <Card variant="glass" className="overflow-hidden border-white/10 hover:shadow-glass transition-shadow">
-            <div className="p-4 sm:p-6 lg:p-6">
-              <div className="flex items-start justify-between mb-4 gap-3">
-                <div className="min-w-0 flex-1">
-                  <Badge className="bg-primary text-primary-foreground mb-2 text-xs">
-                    TREINO DE HOJE
-                  </Badge>
-                  <h2 className="text-lg sm:text-2xl mb-1 break-words">{todayWorkout.name}</h2>
-                  <p className="text-white/70 text-sm sm:text-base">{todayWorkout.type}</p>
-                </div>
-                <Dumbbell className="h-10 w-10 sm:h-12 sm:w-12 text-primary/40 shrink-0" />
+          <div className="rounded-2xl p-4 sm:p-5 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] backdrop-blur-sm">
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] font-medium text-primary/80 uppercase tracking-wider mb-1">Treino de hoje</p>
+                <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight break-words">{todayWorkout.name}</h2>
+                <p className="text-white/60 text-sm mt-0.5">{todayWorkout.type}</p>
               </div>
-              <div className="relative z-10 flex flex-wrap gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <TrendingUp className="h-4 w-4 text-primary shrink-0" />
-                  <span>{todayWorkout.exercises} exercícios</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Calendar className="h-4 w-4 text-primary shrink-0" />
-                  <span>{todayWorkout.duration}</span>
-                </div>
-              </div>
-              <Button variant="default" size="lg" className="w-full" onClick={() => navigate("/workout-overview")}>
-                <PlayCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                VER TREINO / INICIAR
-              </Button>
+              <Dumbbell className="h-8 w-8 sm:h-9 sm:w-9 text-primary/50 shrink-0" />
             </div>
-          </Card>
+            <div className="flex flex-wrap gap-3 mb-4 text-xs text-white/50">
+              <span className="flex items-center gap-1.5">
+                <TrendingUp className="size-3.5 text-primary/60" />
+                {todayWorkout.exercises} exercícios
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Calendar className="size-3.5 text-primary/60" />
+                {todayWorkout.duration}
+              </span>
+            </div>
+            <Button variant="default" size="lg" className="w-full rounded-xl font-medium" onClick={() => navigate("/workout-overview")}>
+              <PlayCircle className="mr-2 size-4" />
+              Ver treino / Iniciar
+            </Button>
+          </div>
 
-          <Card variant="glass" className="p-4 sm:p-6 lg:p-6 border-white/10">
-            <h3 className="text-lg sm:text-xl lg:text-2xl mb-4 text-white">Todos os treinos</h3>
-            <div className="space-y-3 sm:space-y-4">
+          <div className="rounded-2xl p-4 sm:p-5 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] backdrop-blur-sm">
+            <h3 className="text-sm font-medium text-white/90 tracking-tight mb-3">Todos os treinos</h3>
+            <div className="space-y-1.5">
               {allWorkouts.map((workout) => (
                 <div
                   key={workout.id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 gap-3"
+                  className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-white/[0.04] gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className="bg-primary/20 p-2 rounded-lg shrink-0">
-                      <Dumbbell className="h-4 w-4 text-primary" />
-                    </div>
+                    <div className="size-1.5 rounded-full shrink-0 bg-primary/50" />
                     <div className="min-w-0">
-                      <p className="font-medium text-sm sm:text-base truncate text-white">{workout.name}</p>
-                      <p className="text-xs sm:text-sm text-white/60">{workout.type} · {workout.duration} · {workout.exercises} ex.</p>
+                      <p className="font-medium text-sm truncate text-white/95">{workout.name}</p>
+                      <p className="text-[11px] text-white/45">{workout.type} · {workout.duration}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {workout.completed && (
-                      <Badge variant="secondary" className="bg-success/20 text-success border-success/30 text-xs">
-                        Completo
-                      </Badge>
+                      <span className="text-[10px] font-medium text-primary/80">Concluído</span>
                     )}
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
+                      className="text-white/70 hover:text-white h-8 text-xs"
                       onClick={() => navigate("/workout-overview")}
                     >
                       Ver
@@ -101,7 +92,7 @@ export function StudentWorkouts() {
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
         </div>
       </div>
 

@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { Card } from "@/ui/components/ui/card";
 import { Button } from "@/ui/components/ui/button";
-import { Progress } from "@/ui/components/ui/progress";
 import { Badge } from "@/ui/components/ui/badge";
 import { 
   Flame, 
   Dumbbell, 
   PlayCircle, 
-  ChefHat, 
+  ChefHat,
   TrendingUp, 
   Trophy,
   Home,
   Calendar,
   User,
-  LogOut
+  LogOut,
+  ArrowUpRight
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { TREINO_HOJE_ILLUSTRATION_URL } from "@/shared/constants/images";
@@ -151,101 +151,90 @@ export function StudentDashboard() {
           </div>
         </Card>
 
-        {/* Daily Diet Progress */}
-        <Card variant="glass" className="p-4 sm:p-6 border-white/10">
-          <div className="flex items-center gap-3 mb-4 sm:mb-6">
-            <div className="bg-primary/20 p-2 rounded-lg shrink-0">
-              <ChefHat className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-            </div>
-            <h3 className="text-lg sm:text-xl text-white">Dieta de Hoje</h3>
+        {/* Dieta de Hoje */}
+        <div
+          className="rounded-2xl p-4 sm:p-5 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] backdrop-blur-sm"
+        >
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <h3 className="text-sm font-medium text-white/90 tracking-tight">
+              Dieta de Hoje
+            </h3>
+            <button
+              type="button"
+              onClick={() => navigate("/diet")}
+              className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.12] text-white/80 transition-colors"
+              aria-label="Ver dieta"
+            >
+              <ArrowUpRight className="size-3.5" />
+            </button>
           </div>
-
-          <div className="space-y-4 sm:space-y-5">
-            {/* Calories */}
-            <div>
-              <div className="flex justify-between mb-2 gap-2">
-                <span className="text-xs sm:text-sm font-medium">Calorias</span>
-                <span className="text-xs sm:text-sm text-white/60 truncate">
-                  {macros.calories.current}/{macros.calories.target} {macros.calories.unit}
-                </span>
-              </div>
-              <Progress 
-                value={(macros.calories.current / macros.calories.target) * 100} 
-                className="h-3 bg-muted"
-              />
-            </div>
-
-            {/* Protein */}
-            <div>
-              <div className="flex justify-between mb-2 gap-2">
-                <span className="text-xs sm:text-sm font-medium">Proteína</span>
-                <span className="text-xs sm:text-sm text-white/60 truncate">
-                  {macros.protein.current}/{macros.protein.target} {macros.protein.unit}
-                </span>
-              </div>
-              <Progress 
-                value={(macros.protein.current / macros.protein.target) * 100}
-                className="h-3 bg-muted [&>div]:bg-primary"
-              />
-            </div>
-
-            {/* Carbs */}
-            <div>
-              <div className="flex justify-between mb-2 gap-2">
-                <span className="text-xs sm:text-sm font-medium">Carboidratos</span>
-                <span className="text-xs sm:text-sm text-white/60 truncate">
-                  {macros.carbs.current}/{macros.carbs.target} {macros.carbs.unit}
-                </span>
-              </div>
-              <Progress 
-                value={(macros.carbs.current / macros.carbs.target) * 100}
-                className="h-3 bg-muted [&>div]:bg-blue-500"
-              />
-            </div>
-
-            {/* Fats */}
-            <div>
-              <div className="flex justify-between mb-2 gap-2">
-                <span className="text-xs sm:text-sm font-medium">Gorduras</span>
-                <span className="text-xs sm:text-sm text-white/60 truncate">
-                  {macros.fats.current}/{macros.fats.target} {macros.fats.unit}
-                </span>
-              </div>
-              <Progress 
-                value={(macros.fats.current / macros.fats.target) * 100}
-                className="h-3 bg-muted [&>div]:bg-orange-500"
-              />
-            </div>
+          <div className="flex items-baseline gap-2 mb-0.5">
+            <span className="text-2xl sm:text-3xl font-semibold text-white tabular-nums tracking-tight">
+              {macros.calories.current.toLocaleString("pt-BR")}
+            </span>
+            <span className="text-xs text-white/50">
+              de {macros.calories.target.toLocaleString("pt-BR")} kcal
+            </span>
           </div>
-        </Card>
+          <p className="text-[11px] text-white/45 mb-3">Meta diária</p>
+          <div className="h-1.5 w-full rounded-full bg-white/[0.08] overflow-hidden">
+            <div
+              className="h-full rounded-full bg-primary/70 transition-all duration-500"
+              style={{ width: `${Math.min(100, (macros.calories.current / macros.calories.target) * 100)}%` }}
+            />
+          </div>
+        </div>
 
-        {/* Recent Workouts */}
-        <Card variant="glass" className="p-4 sm:p-6 border-white/10">
-          <h3 className="text-lg sm:text-xl mb-4 text-white">Treinos Recentes</h3>
-          <div className="space-y-3">
+        {/* Treinos Recentes — clean e elegante */}
+        <div
+          className="rounded-2xl p-4 sm:p-5 bg-white/[0.06] border border-white/[0.06] shadow-[0_2px_12px_rgba(0,0,0,0.06)] backdrop-blur-sm"
+        >
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <h3 className="text-sm font-medium text-white/90 tracking-tight">
+              Treinos Recentes
+            </h3>
+            <button
+              type="button"
+              onClick={() => navigate("/student/workouts")}
+              className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.12] text-white/80 transition-colors"
+              aria-label="Ver treinos"
+            >
+              <ArrowUpRight className="size-3.5" />
+            </button>
+          </div>
+          <div className="flex items-baseline gap-2 mb-0.5">
+            <span className="text-2xl sm:text-3xl font-semibold text-white tabular-nums tracking-tight">
+              {recentWorkouts.filter((w) => w.completed).length}
+            </span>
+            <span className="text-xs text-white/50">
+              de {recentWorkouts.length} concluídos
+            </span>
+          </div>
+          <p className="text-[11px] text-white/45 mb-3">Última semana</p>
+          <div className="space-y-1.5">
             {recentWorkouts.map((workout, index) => (
-              <div 
+              <div
                 key={index}
-                className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 gap-3"
+                className="flex items-center justify-between py-2 px-3 rounded-lg bg-white/[0.04] gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="bg-primary/20 p-2 rounded-lg shrink-0">
-                    <Dumbbell className="h-4 w-4 text-primary" />
-                  </div>
+                  <div
+                    className={`size-1.5 rounded-full shrink-0 ${workout.completed ? "bg-primary/80" : "bg-white/25"}`}
+                  />
                   <div className="min-w-0">
-                    <p className="font-medium text-sm sm:text-base truncate text-white">{workout.name}</p>
-                    <p className="text-xs sm:text-sm text-white/60">{workout.date}</p>
+                    <p className="font-medium text-sm truncate text-white/95">{workout.name}</p>
+                    <p className="text-[11px] text-white/45">{workout.date}</p>
                   </div>
                 </div>
                 {workout.completed && (
-                  <Badge variant="secondary" className="bg-success/20 text-success border-success/30 shrink-0 text-xs">
-                    Completo
-                  </Badge>
+                  <span className="text-[10px] font-medium text-primary/80">
+                    Concluído
+                  </span>
                 )}
               </div>
             ))}
           </div>
-        </Card>
+        </div>
         </div>
       </div>
 
