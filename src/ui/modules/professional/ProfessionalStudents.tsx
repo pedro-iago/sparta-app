@@ -409,66 +409,95 @@ export function ProfessionalStudents() {
 
       {/* Sheet - Dados do cliente */}
       <Sheet open={!!selectedStudent} onOpenChange={(open) => !open && setSelectedStudent(null)}>
-        <SheetContent side="right" className="sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle>Dados do aluno</SheetTitle>
-            <SheetDescription>Informações do cliente vinculado ao seu perfil</SheetDescription>
-          </SheetHeader>
-          {selectedStudent && (
-            <div className="mt-6 space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-primary/20 rounded-full w-14 h-14 flex items-center justify-center shrink-0">
-                  <span className="font-bold text-lg text-primary">{selectedStudent.avatar}</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg">{selectedStudent.name}</h3>
-                  {getStatusBadge(selectedStudent.status)}
-                </div>
-              </div>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center gap-3">
-                  <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span className="text-muted-foreground">E-mail:</span>
-                  <span className="break-all">{selectedStudent.email}</span>
-                </div>
-                {selectedStudent.phone && (
-                  <div className="flex items-center gap-3">
-                    <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <span className="text-muted-foreground">Telefone:</span>
-                    <span>{selectedStudent.phone}</span>
+        <SheetContent
+          side="right"
+          className="w-[100vw] sm:w-full sm:max-w-md !bg-[#171717] border-l border-border p-0 flex flex-col overflow-hidden"
+        >
+          <div className="flex flex-col h-full overflow-hidden">
+            <SheetHeader className="p-4 sm:p-6 pb-2 border-b border-border shrink-0">
+              <SheetTitle className="text-lg sm:text-xl">Dados do aluno</SheetTitle>
+              <SheetDescription className="text-sm text-muted-foreground">
+                Informações do cliente vinculado ao seu perfil
+              </SheetDescription>
+            </SheetHeader>
+
+            {selectedStudent && (
+              <>
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="rounded-full w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0 bg-[#252525] border border-white/10">
+                      <span className="font-bold text-lg sm:text-xl text-primary">{selectedStudent.avatar}</span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-base sm:text-lg text-foreground truncate">{selectedStudent.name}</h3>
+                      <div className="mt-1.5">{getStatusBadge(selectedStudent.status)}</div>
+                    </div>
                   </div>
-                )}
-                {selectedStudent.birthDate && (
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <span className="text-muted-foreground">Data de nasc.:</span>
-                    <span>{selectedStudent.birthDate}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Plano:</span>
-                  <Badge variant="secondary">{selectedStudent.plan}</Badge>
+
+                  <dl className="space-y-4 sm:space-y-5">
+                    <div className="grid gap-1">
+                      <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                        <Mail className="h-3.5 w-3.5 shrink-0" /> E-mail
+                      </dt>
+                      <dd className="text-sm sm:text-base text-foreground break-all">{selectedStudent.email}</dd>
+                    </div>
+                    {selectedStudent.phone && (
+                      <div className="grid gap-1">
+                        <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                          <Phone className="h-3.5 w-3.5 shrink-0" /> Telefone
+                        </dt>
+                        <dd className="text-sm sm:text-base text-foreground">{selectedStudent.phone}</dd>
+                      </div>
+                    )}
+                    {selectedStudent.birthDate && (
+                      <div className="grid gap-1">
+                        <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                          <Calendar className="h-3.5 w-3.5 shrink-0" /> Data de nasc.
+                        </dt>
+                        <dd className="text-sm sm:text-base text-foreground">{selectedStudent.birthDate}</dd>
+                      </div>
+                    )}
+                    <div className="grid gap-1">
+                      <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Plano</dt>
+                      <dd><Badge variant="secondary" className="font-normal">{selectedStudent.plan}</Badge></dd>
+                    </div>
+                    <div className="grid gap-1">
+                      <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Frequência</dt>
+                      <dd className="text-sm sm:text-base text-foreground">{selectedStudent.frequency}x por semana</dd>
+                    </div>
+                    {selectedStudent.goal && (
+                      <div className="grid gap-1">
+                        <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                          <Target className="h-3.5 w-3.5 shrink-0" /> Objetivo
+                        </dt>
+                        <dd className="text-sm sm:text-base text-foreground">{selectedStudent.goal}</dd>
+                      </div>
+                    )}
+                    {selectedStudent.lastWorkout && selectedStudent.lastWorkout !== "—" && (
+                      <div className="grid gap-1 pt-3 border-t border-border">
+                        <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Último treino</dt>
+                        <dd className="text-sm sm:text-base text-foreground">{selectedStudent.lastWorkout}</dd>
+                      </div>
+                    )}
+                  </dl>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Frequência:</span>
-                  <span>{selectedStudent.frequency}x por semana</span>
+
+                <div className="p-4 sm:p-6 pt-4 border-t border-border shrink-0 bg-[#171717]">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedStudent(null)}
+                    className="w-full min-h-[2.75rem] sm:min-h-[3rem] rounded-xl font-semibold text-sm sm:text-base text-[#171512] transition-transform duration-200 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#171717] hover:brightness-110"
+                    style={{
+                      background: "linear-gradient(145deg, #e8c85c, #c9a227)",
+                      boxShadow: "0 4px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 6px rgba(0,0,0,0.15)",
+                    }}
+                  >
+                    Confirmar
+                  </button>
                 </div>
-                {selectedStudent.goal && (
-                  <div className="flex items-center gap-3">
-                    <Target className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <span className="text-muted-foreground">Objetivo:</span>
-                    <span>{selectedStudent.goal}</span>
-                  </div>
-                )}
-                {selectedStudent.lastWorkout && selectedStudent.lastWorkout !== "—" && (
-                  <div className="pt-2 border-t border-border">
-                    <span className="text-muted-foreground">Último treino: </span>
-                    <span>{selectedStudent.lastWorkout}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+              </>
+            )}
+          </div>
         </SheetContent>
       </Sheet>
 
