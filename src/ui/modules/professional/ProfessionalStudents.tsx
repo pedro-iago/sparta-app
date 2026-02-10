@@ -32,8 +32,6 @@ import {
   Eye,
   ChevronRight,
   Plus,
-  PanelLeftClose,
-  PanelLeftOpen,
   Mail,
   Phone,
   Calendar,
@@ -41,9 +39,8 @@ import {
   ArrowDownAZ,
   Filter,
 } from "lucide-react";
+import { FloatingNav, type FloatingNavItem } from "@/ui/components/ui/floating-nav";
 import { useNavigate } from "react-router";
-
-const SIDEBAR_COLLAPSED_KEY = "@sparta:professional-sidebar-collapsed";
 
 interface Student {
   id: string;
@@ -78,10 +75,6 @@ const PLAN_OPTIONS = [
 export function ProfessionalStudents() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() =>
-    localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1"
-  );
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [newStudentOpen, setNewStudentOpen] = useState(false);
   const [newStudentPlan, setNewStudentPlan] = useState<string>("");
@@ -90,11 +83,20 @@ export function ProfessionalStudents() {
   const [frequencyFilter, setFrequencyFilter] = useState<string>("all");
   const [sortAlphabetical, setSortAlphabetical] = useState(false);
 
-  const toggleSidebar = () => {
-    const next = !sidebarCollapsed;
-    setSidebarCollapsed(next);
-    localStorage.setItem(SIDEBAR_COLLAPSED_KEY, next ? "1" : "0");
-  };
+  const floatingNavItems: FloatingNavItem[] = [
+    { icon: <FileText />, label: "Revisões", onClick: () => navigate("/dashboard/professional") },
+    { icon: <Users />, label: "Meus Alunos", onClick: () => {} },
+    { icon: <Sparkles />, label: "IA Assistente", onClick: () => {} },
+    {
+      icon: <LogOut />,
+      label: "Sair",
+      onClick: () => {
+        localStorage.removeItem("@sparta:user");
+        navigate("/login", { replace: true });
+        window.location.reload();
+      },
+    },
+  ];
 
   const filteredStudents = (() => {
     let list = MOCK_STUDENTS.filter(
@@ -124,102 +126,9 @@ export function ProfessionalStudents() {
 
   return (
     <div className="min-h-screen bg-page-dark">
-      {/* Backdrop mobile */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 lg:hidden ${mobileMenuOpen ? "block" : "hidden"}`}
-        onClick={closeMobileMenu}
-        aria-hidden="true"
-      />
-
-      {/* Sidebar - minimizável; em mobile abre como overlay */}
-      <div
-        className={`fixed left-0 top-0 h-full glass-card border-r border-white/10 rounded-none z-50 flex flex-col transition-[width] duration-200 ${
-          mobileMenuOpen ? "w-64 p-6" : sidebarCollapsed ? "w-20 p-3" : "w-64 p-6"
-        } ${mobileMenuOpen ? "flex" : "hidden lg:flex"}`}
-      >
-        {/* Header: logo à esquerda, seta à direita (mesmo lugar minimizada ou não) */}
-        <div className="flex items-center justify-between w-full mb-6 min-h-10">
-          <div className="min-w-0 flex-1 flex items-center">
-            {sidebarCollapsed ? (
-              <span className="text-lg font-bold text-primary">S</span>
-            ) : (
-              <h1 className="text-2xl text-primary truncate">SPARTA AI</h1>
-            )}
-          </div>
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            title={sidebarCollapsed ? "Expandir menu" : "Minimizar menu"}
-            className="shrink-0 p-1.5 rounded-md opacity-50 hover:opacity-80 bg-black/10 hover:bg-black/20 transition-opacity"
-            aria-label={sidebarCollapsed ? "Expandir menu" : "Minimizar menu"}
-          >
-            {sidebarCollapsed ? (
-              <PanelLeftOpen className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <PanelLeftClose className="h-4 w-4 text-muted-foreground" />
-            )}
-          </button>
-        </div>
-
-        <nav className="space-y-2 flex-1">
-          <Button
-            variant="ghost"
-            className={sidebarCollapsed ? "w-full justify-center p-2" : "w-full justify-start"}
-            onClick={() => { navigate("/dashboard/professional"); closeMobileMenu(); }}
-            title="Revisões"
-          >
-            <FileText className={sidebarCollapsed ? "h-5 w-5" : "mr-3 h-5 w-5"} />
-            {!sidebarCollapsed && "Revisões"}
-          </Button>
-          <Button
-            variant="ghost"
-            className={`${sidebarCollapsed ? "w-full justify-center p-2" : "w-full justify-start"} bg-primary/10 text-primary hover:bg-primary/20`}
-            title="Meus Alunos"
-          >
-            <Users className={sidebarCollapsed ? "h-5 w-5" : "mr-3 h-5 w-5"} />
-            {!sidebarCollapsed && "Meus Alunos"}
-          </Button>
-          <Button
-            variant="ghost"
-            className={sidebarCollapsed ? "w-full justify-center p-2" : "w-full justify-start"}
-            title="IA Assistente"
-          >
-            <Sparkles className={sidebarCollapsed ? "h-5 w-5" : "mr-3 h-5 w-5"} />
-            {!sidebarCollapsed && "IA Assistente"}
-          </Button>
-        </nav>
-
-        <div className={sidebarCollapsed ? "flex flex-col items-center gap-2" : "space-y-0"}>
-          <Button
-            variant="ghost"
-            size={sidebarCollapsed ? "icon" : "default"}
-            className={`text-muted-foreground ${sidebarCollapsed ? "w-10" : "w-full justify-start"}`}
-            onClick={() => {
-              closeMobileMenu();
-              localStorage.removeItem("@sparta:user");
-              navigate("/login", { replace: true });
-              window.location.reload();
-            }}
-            title="Sair"
-          >
-            <LogOut className={sidebarCollapsed ? "h-5 w-5" : "mr-3 h-5 w-5"} />
-            {!sidebarCollapsed && "Sair"}
-          </Button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className={sidebarCollapsed ? "lg:ml-20" : "lg:ml-64"} style={{ transition: "margin-left 0.2s" }}>
+      <div className="w-full">
         <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:px-8">
           <div className="max-w-7xl mx-auto flex items-center sm:items-start justify-between gap-4">
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden shrink-0 p-2 rounded-md opacity-70 hover:opacity-100 bg-white/10 hover:bg-white/20 text-white"
-              aria-label="Abrir menu"
-            >
-              <PanelLeftOpen className="h-6 w-6" />
-            </button>
             <div className="min-w-0 flex-1">
               <h1 className="text-xl sm:text-2xl font-semibold mb-0.5 truncate text-white tracking-tight">Meus alunos</h1>
               <p className="text-white/50 text-sm">Lista de alunos vinculados ao seu perfil</p>
@@ -236,7 +145,7 @@ export function ProfessionalStudents() {
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-6 lg:p-8 pb-24 max-w-7xl mx-auto">
           {/* Barra de ferramentas: busca + contagem + ação */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
             <div className="flex-1 w-full sm:max-w-md relative">
@@ -392,6 +301,8 @@ export function ProfessionalStudents() {
           )}
         </div>
       </div>
+
+      <FloatingNav items={floatingNavItems} position="bottom-center" />
 
       {/* Sheet - Dados do cliente */}
       <Sheet open={!!selectedStudent} onOpenChange={(open) => !open && setSelectedStudent(null)}>

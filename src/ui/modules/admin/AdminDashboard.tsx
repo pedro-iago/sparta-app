@@ -1,4 +1,5 @@
 import { Button } from "@/ui/components/ui/button";
+import { FloatingNav, type FloatingNavItem } from "@/ui/components/ui/floating-nav";
 import {
   Table,
   TableBody,
@@ -32,6 +33,13 @@ import { useNavigate } from "react-router";
 
 export function AdminDashboard() {
   const navigate = useNavigate();
+
+  const floatingNavItems: FloatingNavItem[] = [
+    { icon: <LayoutDashboard />, label: "Dashboard", onClick: () => {} },
+    { icon: <Users />, label: "Usuários", onClick: () => navigate("/admin/users") },
+    { icon: <BarChart3 />, label: "Relatórios", onClick: () => navigate("/admin/reports") },
+    { icon: <Settings />, label: "Configurações", onClick: () => {} },
+  ];
 
   // Mock data for charts
   const revenueData = [
@@ -108,66 +116,28 @@ export function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-page-dark">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 glass-card border-r border-white/10 rounded-none p-6 hidden lg:block">
-        <div className="mb-8">
-          <h1 className="text-xl font-semibold text-primary/90 tracking-tight">Sparta AI</h1>
-          <p className="text-xs text-white/50">Admin</p>
-        </div>
-
-        <nav className="space-y-2">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start bg-primary/10 text-primary hover:bg-primary/20"
-          >
-            <LayoutDashboard className="mr-3 h-5 w-5" />
-            Dashboard
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-white/70 hover:text-white"
-            onClick={() => navigate("/admin/users")}
-          >
-            <Users className="mr-3 h-5 w-5" />
-            Usuários
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-white/70 hover:text-white"
-            onClick={() => navigate("/admin/reports")}
-          >
-            <BarChart3 className="mr-3 h-5 w-5" />
-            Relatórios
-          </Button>
-          <Button variant="ghost" className="w-full justify-start text-white/70 hover:text-white">
-            <Settings className="mr-3 h-5 w-5" />
-            Configurações
-          </Button>
-        </nav>
-
-        <div className="absolute bottom-6 left-6 right-6">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-white/70 hover:text-white"
-            onClick={() => navigate("/")}
-          >
-            <LogOut className="mr-3 h-5 w-5" />
-            Sair
-          </Button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="lg:ml-64">
+      <div className="w-full">
         {/* Header */}
         <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-xl sm:text-2xl font-semibold mb-0.5 text-white tracking-tight">Dashboard Administrativo</h1>
-            <p className="text-white/50 text-sm">Visão geral da plataforma e métricas</p>
+          <div className="max-w-7xl mx-auto flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl font-semibold mb-0.5 text-white tracking-tight">Dashboard Administrativo</h1>
+              <p className="text-white/50 text-sm">Visão geral da plataforma e métricas</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/")}
+              className="shrink-0 text-white/60 hover:text-white flex items-center gap-2"
+              title="Sair"
+            >
+              <LogOut className="size-4" />
+              <span className="hidden sm:inline text-sm">Sair</span>
+            </Button>
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 lg:space-y-8">
+        <div className="p-4 sm:p-6 lg:p-8 pb-24 max-w-7xl mx-auto space-y-6 lg:space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="glass-card-3d rounded-2xl p-4 sm:p-5">
               <div className="flex items-center justify-between mb-1.5">
@@ -308,6 +278,8 @@ export function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      <FloatingNav items={floatingNavItems} position="bottom-center" />
     </div>
   );
 }
