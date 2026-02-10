@@ -14,6 +14,7 @@ import { StudentProfile } from './ui/modules/student/StudentProfile';
 
 // Profissional (Trainer) - Ajustado para o nome do arquivo na sua tree
 import { TrainerDashboard as ProfessionalDashboard } from './ui/modules/professional/ProfessionalDashboard';
+import { ProfessionalStudents } from './ui/modules/professional/ProfessionalStudents';
 
 // Admin
 import { AdminDashboard } from './ui/modules/admin/AdminDashboard';
@@ -75,6 +76,11 @@ const App: React.FC = () => {
           <Route path="/dashboard/professional" element={
             <PrivateRoute allowedRole="PROFESSIONAL">
               <ProfessionalDashboard />
+            </PrivateRoute>
+          } />
+          <Route path="/dashboard/professional/students" element={
+            <PrivateRoute allowedRole="PROFESSIONAL">
+              <ProfessionalStudents />
             </PrivateRoute>
           } />
 
