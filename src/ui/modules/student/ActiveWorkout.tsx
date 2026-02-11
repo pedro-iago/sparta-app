@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { useSparta } from "@/shared/context/SpartaContext";
 import { DEMO_WORKOUT } from "./WorkoutOverview";
 import { IMAGES } from "@/shared/constants/images";
@@ -19,9 +20,11 @@ interface WorkoutHeaderProps {
   title: string;
   /** Tempo decorrido em segundos; se undefined, não exibe cronômetro */
   elapsedSeconds?: number;
+  /** Ao clicar na seta de voltar (volta à tela anterior) */
+  onBack?: () => void;
 }
 
-export function WorkoutHeader({ title, elapsedSeconds }: WorkoutHeaderProps) {
+export function WorkoutHeader({ title, elapsedSeconds, onBack }: WorkoutHeaderProps) {
   const mm = elapsedSeconds != null ? Math.floor(elapsedSeconds / 60) : 0;
   const ss = elapsedSeconds != null ? elapsedSeconds % 60 : 0;
   const timeStr = `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
@@ -29,8 +32,18 @@ export function WorkoutHeader({ title, elapsedSeconds }: WorkoutHeaderProps) {
   return (
     <div className="sticky top-0 z-20 w-full shrink-0 px-4 pt-4 sm:px-6 sm:pt-4 lg:px-8 pb-2">
       <div className="max-w-4xl mx-auto">
-        <header className="glass-card-3d border border-white/10 rounded-2xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8 flex items-center justify-between gap-3">
-          <h1 className="text-2xl sm:text-3xl mb-0 truncate text-white font-bold min-w-0 flex-1">{title}</h1>
+        <header className="glass-card-3d border border-white/10 rounded-2xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8 flex items-center gap-3">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors touch-manipulation"
+              aria-label="Voltar"
+            >
+              <ArrowLeft className="size-5 sm:size-6" />
+            </button>
+          )}
+          <h1 className="text-xl sm:text-2xl lg:text-3xl mb-0 truncate text-white font-bold min-w-0 flex-1">{title}</h1>
           {elapsedSeconds != null && (
             <span className="text-lg sm:text-xl font-mono tabular-nums shrink-0 text-primary font-semibold">{timeStr}</span>
           )}
@@ -422,6 +435,7 @@ export default function ActiveWorkout() {
       <WorkoutHeader
         title={contextualTitle}
         elapsedSeconds={isTimerRunning ? elapsedSeconds : undefined}
+        onBack={() => navigate(-1)}
       />
 
       <main className="flex-1 overflow-y-auto">
