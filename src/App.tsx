@@ -11,6 +11,8 @@ import { StudentWorkouts } from './ui/modules/student/StudentWorkouts';
 import WorkoutOverview from './ui/modules/student/WorkoutOverview';
 import ActiveWorkout from './ui/modules/student/ActiveWorkout';
 import DailyDiet from './ui/modules/student/DailyDiet';
+import MealScan from './ui/modules/student/MealScan';
+import DietPhotoGallery from './ui/modules/student/DietPhotoGallery';
 import { StudentProfile } from './ui/modules/student/StudentProfile';
 
 // Profissional (Trainer) - Ajustado para o nome do arquivo na sua tree
@@ -71,6 +73,16 @@ const App: React.FC = () => {
           <Route path="/diet" element={
             <PrivateRoute allowedRole="STUDENT">
               <DailyDiet />
+            </PrivateRoute>
+          } />
+          <Route path="/meal-scan" element={
+            <PrivateRoute allowedRole="STUDENT">
+              <MealScan />
+            </PrivateRoute>
+          } />
+          <Route path="/diet/photos" element={
+            <PrivateRoute allowedRole="STUDENT">
+              <DietPhotoGallery />
             </PrivateRoute>
           } />
           <Route path="/dashboard/perfil" element={

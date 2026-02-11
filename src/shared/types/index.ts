@@ -57,6 +57,16 @@ export interface Workout {
     completedCount?: number;
 }
 
+export interface MealVariation {
+    id: string;
+    name: string;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    imageUrl?: string;
+}
+
 export interface Meal {
     id: string;
     name: string;
@@ -66,6 +76,17 @@ export interface Meal {
     fat: number;
     time: string;
     completed: boolean;
+    /** Até 3 opções/variações por refeição */
+    variations?: MealVariation[];
+}
+
+/** Foto da refeição enviada pelo cliente */
+export interface DietPhoto {
+    id: string;
+    mealId: string;
+    mealName: string;
+    imageUrl: string;
+    createdAt: string;
 }
 
 export interface UserState {
