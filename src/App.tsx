@@ -19,6 +19,7 @@ import { ProfessionalStudents } from './ui/modules/professional/ProfessionalStud
 
 // Admin
 import { AdminDashboard } from './ui/modules/admin/AdminDashboard';
+import { AdminReports } from './ui/modules/admin/AdminReports';
 
 const PrivateRoute = ({ children, allowedRole }: { children: JSX.Element, allowedRole: string }) => {
   const userStr = localStorage.getItem('@sparta:user');
@@ -94,6 +95,11 @@ const App: React.FC = () => {
           <Route path="/dashboard/admin" element={
             <PrivateRoute allowedRole="ADMIN">
               <AdminDashboard />
+            </PrivateRoute>
+          } />
+          <Route path="/admin/reports" element={
+            <PrivateRoute allowedRole="ADMIN">
+              <AdminReports />
             </PrivateRoute>
           } />
 

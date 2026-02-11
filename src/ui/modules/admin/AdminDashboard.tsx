@@ -35,7 +35,7 @@ export function AdminDashboard() {
   const navigate = useNavigate();
 
   const floatingNavItems: FloatingNavItem[] = [
-    { icon: <LayoutDashboard />, label: "Dashboard", onClick: () => {} },
+    { icon: <LayoutDashboard />, label: "Dashboard", onClick: () => navigate("/dashboard/admin") },
     { icon: <Users />, label: "Usuários", onClick: () => navigate("/admin/users") },
     { icon: <BarChart3 />, label: "Relatórios", onClick: () => navigate("/admin/reports") },
     { icon: <Settings />, label: "Configurações", onClick: () => {} },
