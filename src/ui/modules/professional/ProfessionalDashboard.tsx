@@ -113,18 +113,14 @@ export function TrainerDashboard() {
     : mockReviews.filter(r => r.status === filter);
 
   return (
-    <div className="min-h-screen bg-page-dark">
-      {/* Main Content - full width */}
-      <div className="w-full">
-        {/* Header */}
-        <div className="glass-card-3d border-0 border-b border-white/10 rounded-none rounded-b-2xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
-          <div className="max-w-5xl mx-auto">
-            <h1 className="text-xl sm:text-2xl font-semibold mb-0.5 text-white tracking-tight">Dashboard do Personal</h1>
-            <p className="text-white/50 text-sm">Gerencie treinos e acompanhe seus alunos</p>
-          </div>
-        </div>
+    <div className="min-h-screen min-h-[100dvh] bg-page-dark">
+      <div className="w-full max-w-5xl mx-auto">
+        <header className="glass-card-3d border-0 border-b border-white/10 rounded-none rounded-b-2xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+          <h1 className="text-xl sm:text-2xl font-semibold mb-0.5 text-white tracking-tight">Dashboard do Personal</h1>
+          <p className="text-white/50 text-xs sm:text-sm">Gerencie treinos e acompanhe seus alunos</p>
+        </header>
 
-        <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 pb-24 max-w-5xl mx-auto">
+        <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 pb-24">
           {/* Cards de estatísticas — em mobile 3 colunas compactas, em desktop 3 colunas confortáveis */}
           <section className="grid grid-cols-3 gap-2 sm:gap-4 mb-5 sm:mb-8" aria-label="Resumo">
             <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5">
@@ -162,23 +158,23 @@ export function TrainerDashboard() {
             </div>
           </section>
 
-          {/* Busca e filtros — em mobile empilhados, em desktop na mesma linha */}
+          {/* Busca e filtros */}
           <section className="mb-4 sm:mb-6" aria-label="Filtrar revisões">
-            <div className="glass-card-3d rounded-2xl p-3 sm:p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
               <div className="flex-1 w-full min-w-0 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/45 pointer-events-none" />
                 <Input
                   placeholder="Buscar aluno ou treino..."
-                  className="w-full pl-9 sm:pl-10 h-10 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 rounded-xl text-sm"
+                  className="w-full pl-9 sm:pl-10 min-h-[44px] sm:min-h-0 h-10 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 rounded-xl text-sm"
                 />
               </div>
-              <div className="flex flex-wrap gap-1.5 sm:flex-nowrap">
+              <div className="flex flex-wrap gap-2">
                 {(["all", "draft", "pending", "active"] as const).map((f) => (
                   <button
                     key={f}
                     type="button"
                     onClick={() => setFilter(f)}
-                    className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-colors shrink-0 ${
+                    className={`px-2.5 sm:px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-lg text-[11px] sm:text-xs font-medium transition-colors shrink-0 touch-manipulation ${
                       filter === f
                         ? "bg-primary/80 text-primary-foreground"
                         : "bg-white/[0.06] text-white/60 hover:text-white/80 border border-white/[0.06]"
@@ -194,14 +190,14 @@ export function TrainerDashboard() {
           {/* Lista de revisões */}
           <section aria-label="Revisões para aprovar">
             <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4">
-              <h2 className="text-sm font-medium text-white/70">
+              <h2 className="text-xs sm:text-sm font-medium text-white/70">
                 Revisões <span className="text-white/50 font-normal">({filteredReviews.length})</span>
               </h2>
-              <div className="glass-card-3d rounded-xl p-0.5" role="group" aria-label="Visualização">
+              <div className="glass-card-3d rounded-xl p-0.5 flex" role="group" aria-label="Visualização">
                 <button
                   type="button"
                   onClick={() => setViewMode("list")}
-                  className={`p-1.5 sm:p-2 rounded-md transition-colors ${
+                  className={`p-2 rounded-lg min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center transition-colors touch-manipulation ${
                     viewMode === "list"
                       ? "bg-primary/80 text-primary-foreground"
                       : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
@@ -214,7 +210,7 @@ export function TrainerDashboard() {
                 <button
                   type="button"
                   onClick={() => setViewMode("grid")}
-                  className={`p-1.5 sm:p-2 rounded-md transition-colors ${
+                  className={`p-2 rounded-lg min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center transition-colors touch-manipulation ${
                     viewMode === "grid"
                       ? "bg-primary/80 text-primary-foreground"
                       : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
@@ -264,7 +260,7 @@ export function TrainerDashboard() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="flex-1 text-white/70 hover:text-white hover:bg-white/[0.06] h-9 sm:h-8 text-xs sm:text-sm"
+                      className="flex-1 text-white/70 hover:text-white hover:bg-white/[0.06] min-h-[44px] sm:min-h-8 h-auto py-2 text-xs sm:text-sm touch-manipulation"
                       onClick={() => navigate("/trainer/edit-workout")}
                     >
                       <Eye className="mr-2 size-3.5 shrink-0" />
@@ -273,7 +269,7 @@ export function TrainerDashboard() {
                     <Button
                       variant="default"
                       size="sm"
-                      className="flex-1 rounded-xl font-medium h-9 sm:h-8 text-xs sm:text-sm"
+                      className="flex-1 rounded-xl font-medium min-h-[44px] sm:min-h-8 h-auto py-2 text-xs sm:text-sm touch-manipulation"
                       onClick={() => navigate("/trainer/edit-workout")}
                     >
                       <ThumbsUp className="mr-2 size-3.5 shrink-0" />

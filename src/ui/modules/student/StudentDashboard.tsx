@@ -50,10 +50,10 @@ export function StudentDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-page-dark pb-20 sm:pb-24 flex flex-col items-center">
-      <div className="w-full max-w-4xl mx-auto px-0">
+    <div className="min-h-screen min-h-[100dvh] bg-page-dark pb-20 sm:pb-24 flex flex-col items-center">
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:p-6">
+        <header className="glass-card-3d border-0 border-b border-white/10 rounded-none rounded-b-2xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
           <div className="flex items-start justify-between gap-3 mb-4">
             <div className="min-w-0 flex-1">
               <h1 className="text-2xl sm:text-3xl mb-1 truncate text-white">Olá, Atleta! 💪</h1>
@@ -63,10 +63,10 @@ export function StudentDashboard() {
               variant="ghost"
               size="icon"
               onClick={handleLogout}
-              className="shrink-0 text-white/60 hover:text-white"
+              className="shrink-0 size-10 sm:size-11 min-h-[44px] min-w-[44px] text-white/60 hover:text-white touch-manipulation"
               title="Sair"
             >
-              <LogOut className="h-5 w-5 sm:h-6 sm:w-6" />
+              <LogOut className="size-5 sm:size-6" />
             </Button>
           </div>
           {/* Streak Counter */}
@@ -82,10 +82,10 @@ export function StudentDashboard() {
               <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-primary/60" />
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Main Content */}
-        <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+        <div className="py-4 sm:py-5 lg:py-6 space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Today's Workout Card */}
         <Card variant="glass" className="overflow-hidden border-white/10 transition-shadow">
           <div
@@ -142,10 +142,10 @@ export function StudentDashboard() {
             <Button
               variant="default"
               size="lg"
-              className="relative z-10 w-full"
+              className="relative z-10 w-full min-h-[48px] sm:min-h-12 touch-manipulation"
               onClick={() => navigate("/student/workout")}
             >
-              <PlayCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+              <PlayCircle className="mr-2 size-4 sm:size-5" />
               INICIAR TREINO
             </Button>
           </div>
@@ -160,7 +160,7 @@ export function StudentDashboard() {
             <button
               type="button"
               onClick={() => navigate("/diet")}
-              className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.12] text-white/80 transition-colors"
+              className="flex size-10 sm:size-8 shrink-0 items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.12] text-white/80 transition-colors min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 touch-manipulation"
               aria-label="Ver dieta"
             >
               <ArrowUpRight className="size-3.5" />
@@ -235,7 +235,7 @@ export function StudentDashboard() {
             <button
               type="button"
               onClick={() => navigate("/student/workouts")}
-              className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.12] text-white/80 transition-colors"
+              className="flex size-10 sm:size-8 shrink-0 items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.12] text-white/80 transition-colors min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 touch-manipulation"
               aria-label="Ver treinos"
             >
               <ArrowUpRight className="size-3.5" />
@@ -277,37 +277,40 @@ export function StudentDashboard() {
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 glass-card border-0 border-t border-white/10 rounded-none shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
-        <div className="flex justify-around items-center h-14 sm:h-16 max-w-4xl mx-auto px-2 sm:px-4 lg:px-6">
-          <Button variant="ghost" size="icon" className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0">
-            <Home className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />
+      {/* Bottom Navigation - safe area para notch/home */}
+      <nav
+        className="fixed bottom-0 left-0 right-0 glass-card-3d border-0 border-t border-white/10 rounded-none shadow-[0_-4px_20px_rgba(0,0,0,0.3)]"
+        style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+      >
+        <div className="flex justify-around items-center min-h-14 sm:min-h-16 max-w-4xl mx-auto px-2 sm:px-4 lg:px-6 py-2">
+          <Button variant="ghost" size="icon" className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 min-h-[44px] sm:min-h-0 touch-manipulation">
+            <Home className="size-4 sm:size-5 text-primary shrink-0" />
             <span className="text-[10px] sm:text-xs text-primary truncate">Início</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 text-white/70 hover:text-white"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 min-h-[44px] sm:min-h-0 text-white/70 hover:text-white touch-manipulation"
             onClick={() => navigate("/student/workouts")}
           >
-            <Dumbbell className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+            <Dumbbell className="size-4 sm:size-5 shrink-0" />
             <span className="text-[10px] sm:text-xs truncate">Treinos</span>
           </Button>
-          <Button variant="ghost" size="icon" className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 text-white/70 hover:text-white">
-            <ChefHat className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+          <Button variant="ghost" size="icon" className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 min-h-[44px] sm:min-h-0 text-white/70 hover:text-white touch-manipulation">
+            <ChefHat className="size-4 sm:size-5 shrink-0" />
             <span className="text-[10px] sm:text-xs truncate">Dieta</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 text-white/70 hover:text-white"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="flex-col h-auto gap-0.5 sm:gap-1 py-2 min-w-0 min-h-[44px] sm:min-h-0 text-white/70 hover:text-white touch-manipulation"
             onClick={() => navigate("/dashboard/perfil")}
           >
-            <User className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+            <User className="size-4 sm:size-5 shrink-0" />
             <span className="text-[10px] sm:text-xs truncate">Perfil</span>
           </Button>
         </div>
-      </div>
+      </nav>
     </div>
   );
 }

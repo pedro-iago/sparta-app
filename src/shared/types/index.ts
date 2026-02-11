@@ -27,15 +27,22 @@ export enum MuscleGroup {
     UNKNOWN = 'Geral'
 }
 
+/** Badge de técnica avançada (ex.: Ponto de Falha, Drop Set) */
+export type ExerciseTechnique = 'Ponto de Falha' | 'Drop Set' | 'Biseto' | 'Rest-Pause' | 'Cluster' | string;
+
 export interface Exercise {
     id: string;
     name: string;
     sets: number;
     reps: string;
-    muscleGroup: MuscleGroup; // Novo campo vital
+    muscleGroup: MuscleGroup;
     image?: string;
     done?: boolean;
-    replacementOptions?: Exercise[]; // Sugestões de troca embutidas
+    /** Técnica avançada para exibir como badge */
+    technique?: ExerciseTechnique;
+    /** Equipamento (para filtros) */
+    equipment?: string;
+    replacementOptions?: Exercise[];
 }
 
 export interface Workout {
@@ -46,6 +53,8 @@ export interface Workout {
     exercises: Exercise[];
     isAiGenerated?: boolean;
     status?: 'DRAFT' | 'ACTIVE' | 'COMPLETED';
+    /** Quantidade de exercícios marcados como concluídos (para progress bar) */
+    completedCount?: number;
 }
 
 export interface Meal {

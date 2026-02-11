@@ -125,37 +125,35 @@ export function ProfessionalStudents() {
     }
   };
 
-  const closeMobileMenu = () => setMobileMenuOpen(false);
-
   return (
-    <div className="min-h-screen bg-page-dark">
-      <div className="w-full">
-        <div className="glass-card border-0 border-b border-white/10 rounded-none rounded-b-2xl p-4 sm:p-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex items-center sm:items-start justify-between gap-4">
+    <div className="min-h-screen min-h-[100dvh] bg-page-dark">
+      <div className="w-full max-w-5xl mx-auto">
+        <header className="glass-card-3d border-0 border-b border-white/10 rounded-none rounded-b-2xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+          <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
               <h1 className="text-xl sm:text-2xl font-semibold mb-0.5 truncate text-white tracking-tight">Meus alunos</h1>
-              <p className="text-white/50 text-sm">Lista de alunos vinculados ao seu perfil</p>
+              <p className="text-white/50 text-xs sm:text-sm">Lista de alunos vinculados ao seu perfil</p>
             </div>
             <Button
               size="icon"
-              className="shrink-0 h-10 w-10 rounded-full"
+              className="shrink-0 size-10 sm:size-11 rounded-full min-h-[44px] min-w-[44px] touch-manipulation"
               variant="default"
               onClick={() => setNewStudentOpen(true)}
               title="Registrar novo aluno"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="size-5 sm:size-5" />
             </Button>
           </div>
-        </div>
+        </header>
 
-        <div className="p-4 sm:p-6 lg:p-8 pb-24 max-w-7xl mx-auto">
+        <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 pb-24">
           {/* Barra de ferramentas: busca + contagem + ação */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
             <div className="flex-1 w-full sm:max-w-md relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/45 pointer-events-none" />
               <Input
                 placeholder="Buscar por nome ou e-mail..."
-                className="pl-10 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 h-10 rounded-xl"
+                className="pl-10 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 h-10 sm:h-10 min-h-[44px] rounded-xl text-sm"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -168,24 +166,24 @@ export function ProfessionalStudents() {
           </div>
 
           {/* Filtros */}
-          <div className="flex flex-col gap-4 mb-6">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Filter className="h-4 w-4 shrink-0" />
+          <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-white/70">
+              <Filter className="size-4 shrink-0" />
               <span className="font-medium">Filtros</span>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-muted-foreground uppercase tracking-wider">Status</span>
-                <div className="flex rounded-lg border border-border bg-muted/30 p-0.5">
+                <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">Status</span>
+                <div className="flex rounded-lg border border-white/10 bg-white/[0.04] p-0.5">
                   {(["all", "active", "inactive", "pending"] as const).map((value) => (
                     <button
                       key={value}
                       type="button"
                       onClick={() => setStatusFilter(value)}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                      className={`px-2.5 sm:px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium rounded-md transition-colors touch-manipulation ${
                         statusFilter === value
                           ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                          : "text-white/60 hover:text-white hover:bg-white/[0.06]"
                       }`}
                     >
                       {value === "all" ? "Todos" : value === "active" ? "Ativos" : value === "inactive" ? "Inativos" : "Pendentes"}
@@ -194,9 +192,9 @@ export function ProfessionalStudents() {
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-muted-foreground uppercase tracking-wider">Plano</span>
+                <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">Plano</span>
                 <Select value={planFilter} onValueChange={setPlanFilter}>
-                  <SelectTrigger className="w-[130px] h-8 text-xs bg-muted/50 border-border">
+                  <SelectTrigger className="w-[120px] sm:w-[130px] h-9 sm:h-8 min-h-[44px] sm:min-h-0 text-xs bg-white/[0.06] border-white/10 rounded-xl">
                     <SelectValue placeholder="Plano" />
                   </SelectTrigger>
                   <SelectContent>
@@ -210,9 +208,9 @@ export function ProfessionalStudents() {
                 </Select>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-muted-foreground uppercase tracking-wider">Frequência</span>
+                <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">Frequência</span>
                 <Select value={frequencyFilter} onValueChange={setFrequencyFilter}>
-                  <SelectTrigger className="w-[130px] h-8 text-xs bg-muted/50 border-border">
+                  <SelectTrigger className="w-[120px] sm:w-[130px] h-9 sm:h-8 min-h-[44px] sm:min-h-0 text-xs bg-white/[0.06] border-white/10 rounded-xl">
                     <SelectValue placeholder="Por semana" />
                   </SelectTrigger>
                   <SelectContent>
@@ -229,14 +227,14 @@ export function ProfessionalStudents() {
                 <button
                   type="button"
                   onClick={() => setSortAlphabetical((v) => !v)}
-                  className={`flex items-center gap-2 px-3 py-1.5 h-8 text-xs font-medium rounded-lg border transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-8 text-xs font-medium rounded-lg border transition-colors touch-manipulation ${
                     sortAlphabetical
                       ? "bg-primary/20 border-primary/40 text-primary"
-                      : "border-border bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      : "border-white/10 bg-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.08]"
                   }`}
                   title={sortAlphabetical ? "Desativar ordem alfabética" : "Ordenar A–Z"}
                 >
-                  <ArrowDownAZ className="h-4 w-4" />
+                  <ArrowDownAZ className="size-4 shrink-0" />
                   A–Z
                 </button>
               </div>
@@ -246,14 +244,14 @@ export function ProfessionalStudents() {
           {/* Lista de alunos */}
           <section aria-label="Lista de alunos">
             <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4">
-              <h2 className="text-sm font-medium text-white/70">
+              <h2 className="text-xs sm:text-sm font-medium text-white/70">
                 Alunos <span className="text-white/50 font-normal">({filteredStudents.length})</span>
               </h2>
-              <div className="glass-card-3d rounded-xl p-0.5" role="group" aria-label="Visualização">
+              <div className="glass-card-3d rounded-xl p-0.5 flex" role="group" aria-label="Visualização">
                 <button
                   type="button"
                   onClick={() => setViewMode("list")}
-                  className={`p-1.5 sm:p-2 rounded-md transition-colors ${
+                  className={`p-2 rounded-lg min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:p-2 flex items-center justify-center transition-colors touch-manipulation ${
                     viewMode === "list"
                       ? "bg-primary/80 text-primary-foreground"
                       : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
@@ -266,7 +264,7 @@ export function ProfessionalStudents() {
                 <button
                   type="button"
                   onClick={() => setViewMode("grid")}
-                  className={`p-1.5 sm:p-2 rounded-md transition-colors ${
+                  className={`p-2 rounded-lg min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:p-2 flex items-center justify-center transition-colors touch-manipulation ${
                     viewMode === "grid"
                       ? "bg-primary/80 text-primary-foreground"
                       : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
@@ -288,7 +286,7 @@ export function ProfessionalStudents() {
               {filteredStudents.map((student) => (
                 <div
                   key={student.id}
-                  className="glass-card-3d rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col h-full"
+                  className="glass-card-3d rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col h-full min-w-0"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between flex-shrink-0 min-w-0">
                     <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -312,7 +310,7 @@ export function ProfessionalStudents() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-white/70 hover:text-white h-8 text-xs shrink-0"
+                        className="text-white/70 hover:text-white h-9 sm:h-8 min-h-[44px] sm:min-h-0 text-xs shrink-0 touch-manipulation"
                         onClick={() => setSelectedStudent(student)}
                       >
                         <Eye className="size-3.5 sm:mr-1.5" />

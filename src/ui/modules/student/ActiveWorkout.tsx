@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSparta } from "@/shared/context/SpartaContext";
 import { DEMO_WORKOUT } from "./WorkoutOverview";
 import { IMAGES } from "@/shared/constants/images";
+import { getWorkoutFromStorage, clearWorkoutFromStorage } from "@/shared/utils/workoutStorage";
+import { Input } from "@/ui/components/ui/input";
+import { Skeleton } from "@/ui/components/ui/skeleton";
 import type { Workout, Exercise } from "@/shared/types";
+
+const DEFAULT_REST_SECONDS = 90;
 
 // ---------------------------------------------------------------------------
 // Componentes presentacionais (stateless, dados via props, sem lógica de domínio)
@@ -22,10 +27,10 @@ export function WorkoutHeader({ title, elapsedSeconds }: WorkoutHeaderProps) {
   const timeStr = `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
 
   return (
-    <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4 max-w-4xl mx-auto w-full">
-      <span className="text-sm sm:text-base font-medium uppercase tracking-wider truncate mr-2">{title}</span>
+    <header className="sticky top-0 z-20 glass-card-3d border-0 rounded-none border-b border-white/10 flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4 max-w-4xl mx-auto w-full">
+      <span className="text-sm sm:text-base font-medium uppercase tracking-wider truncate mr-2 text-white">{title}</span>
       {elapsedSeconds != null && (
-        <span className="text-sm sm:text-base font-mono tabular-nums shrink-0">{timeStr}</span>
+        <span className="text-sm sm:text-base font-mono tabular-nums shrink-0 text-primary">{timeStr}</span>
       )}
     </header>
   );
@@ -34,19 +39,28 @@ export function WorkoutHeader({ title, elapsedSeconds }: WorkoutHeaderProps) {
 interface ExerciseHeroProps {
   imageUrl: string;
   alt?: string;
+  loading?: boolean;
+  onLoad?: () => void;
 }
 
-export function ExerciseHero({ imageUrl, alt = "" }: ExerciseHeroProps) {
+export function ExerciseHero({ imageUrl, alt = "", loading, onLoad }: ExerciseHeroProps) {
   return (
     <div
       className="relative w-full aspect-[4/3] sm:aspect-video min-h-[40vh] max-h-[55vh] sm:max-h-[65vh] lg:max-h-[70vh] shrink-0 overflow-hidden bg-black/40 max-w-4xl mx-auto"
     >
+      {loading && (
+        <div className="absolute inset-0 flex flex-col gap-3 p-4">
+          <Skeleton className="flex-1 rounded-xl" />
+          <Skeleton className="h-12 w-2/3 rounded-lg" />
+          <Skeleton className="h-8 w-1/2 rounded-lg" />
+        </div>
+      )}
       <img
         src={imageUrl}
         alt={alt}
-        className="w-full h-full object-cover"
+        className={`w-full h-full object-cover transition-opacity duration-300 ${loading ? "opacity-0" : "opacity-100"}`}
+        onLoad={onLoad}
       />
-      {/* Transição suave entre imagem e texto (semi-transparência, sem corte brusco) */}
       <div
         className="absolute inset-x-0 bottom-0 h-24 sm:h-32 pointer-events-none"
         style={{
@@ -80,12 +94,14 @@ interface PrimaryActionButtonProps {
   onClick: () => void;
   /** Verde = conclusão (Done) */
   variant?: "done" | "primary";
+  disabled?: boolean;
 }
 
 export function PrimaryActionButton({
   label,
   onClick,
   variant = "done",
+  disabled = false,
 }: PrimaryActionButtonProps) {
   const isDone = variant === "done";
   return (
@@ -93,7 +109,8 @@ export function PrimaryActionButton({
       <button
         type="button"
         onClick={onClick}
-        className={`w-full py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg uppercase tracking-wide transition-all active:scale-[0.98] ${
+        disabled={disabled}
+        className={`w-full py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg uppercase tracking-wide transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${
           isDone
             ? "bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg"
             : "bg-primary hover:bg-primary/90 text-[#171512]"
@@ -140,9 +157,153 @@ export function NextExercisesList({ exercises }: NextExercisesListProps) {
   );
 }
 
+/** Cronômetro de descanso: overlay com contagem regressiva; ao chegar em 0 dispara vibração/som */
+interface RestTimerOverlayProps {
+  secondsLeft: number;
+  onDismiss?: () => void;
+}
+
+export function RestTimerOverlay({ secondsLeft, onDismiss }: RestTimerOverlayProps) {
+  const m = Math.floor(secondsLeft / 60);
+  const s = secondsLeft % 60;
+  const text = `${m}:${String(s).padStart(2, "0")}`;
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm">
+      <p className="text-white/70 text-sm uppercase tracking-wider mb-2">Descanso</p>
+      <p className="text-5xl sm:text-6xl font-mono font-bold text-primary tabular-nums">{text}</p>
+      {onDismiss && (
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="mt-6 text-sm text-white/60 hover:text-white underline"
+        >
+          Pular descanso
+        </button>
+      )}
+    </div>
+  );
+}
+
+/** Uma linha da tabela de séries: peso, reps, última sessão (cinza), botão série feita */
+interface SetRowProps {
+  setIndex: number;
+  weight: string;
+  reps: string;
+  lastWeight?: number;
+  lastReps?: number;
+  done: boolean;
+  onWeightChange: (v: string) => void;
+  onRepsChange: (v: string) => void;
+  onMarkDone: () => void;
+}
+
+export function SetRow({
+  setIndex,
+  weight,
+  reps,
+  lastWeight,
+  lastReps,
+  done,
+  onWeightChange,
+  onRepsChange,
+  onMarkDone,
+}: SetRowProps) {
+  return (
+    <div className="grid grid-cols-[auto_1fr_1fr_auto] sm:grid-cols-[auto_1fr_1fr_auto] gap-2 sm:gap-4 items-center py-3 border-b border-white/10 last:border-0">
+      <span className="text-white/60 text-sm font-medium w-8">#{setIndex + 1}</span>
+      <div>
+        <Input
+          type="number"
+          inputMode="decimal"
+          placeholder="kg"
+          value={weight}
+          onChange={(e) => onWeightChange(e.target.value)}
+          className="bg-white/10 border-white/20 text-white h-10"
+        />
+        {lastWeight != null && (
+          <p className="text-xs text-white/40 mt-0.5">Última: {lastWeight} kg</p>
+        )}
+      </div>
+      <div>
+        <Input
+          type="number"
+          inputMode="numeric"
+          placeholder="reps"
+          value={reps}
+          onChange={(e) => onRepsChange(e.target.value)}
+          className="bg-white/10 border-white/20 text-white h-10"
+        />
+        {lastReps != null && (
+          <p className="text-xs text-white/40 mt-0.5">Última: {lastReps} reps</p>
+        )}
+      </div>
+      <button
+        type="button"
+        onClick={onMarkDone}
+        className={`shrink-0 size-10 rounded-full border-2 flex items-center justify-center transition-colors ${
+          done ? "bg-primary border-primary text-[#171512]" : "border-white/30 text-white/50 hover:border-primary/50"
+        }`}
+        aria-label={done ? "Série feita" : "Marcar série como feita"}
+      >
+        {done ? <span className="text-sm font-bold">✓</span> : <span className="text-sm">+</span>}
+      </button>
+    </div>
+  );
+}
+
+/** Tabela de séries com peso e reps + última sessão */
+interface SetsTableProps {
+  setsCount: number;
+  setsLog: { weight: string; reps: string }[];
+  setDone: boolean[];
+  lastSession?: { weight: number; reps: number }[];
+  onSetsLogChange: (index: number, field: "weight" | "reps", value: string) => void;
+  onSetDone: (index: number) => void;
+}
+
+export function SetsTable({
+  setsCount,
+  setsLog,
+  setDone,
+  lastSession,
+  onSetsLogChange,
+  onSetDone,
+}: SetsTableProps) {
+  return (
+    <div className="px-4 sm:px-6 lg:px-8 py-4 max-w-4xl mx-auto w-full">
+      <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white/60 mb-3">
+        Registro de cargas
+      </h3>
+      <div className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden divide-y divide-white/10">
+        {Array.from({ length: setsCount }, (_, i) => (
+          <div key={i} className="px-3 sm:px-4">
+            <SetRow
+              setIndex={i}
+              weight={setsLog[i]?.weight ?? ""}
+              reps={setsLog[i]?.reps ?? ""}
+              lastWeight={lastSession?.[i]?.weight}
+              lastReps={lastSession?.[i]?.reps}
+              done={setDone[i] ?? false}
+              onWeightChange={(v) => onSetsLogChange(i, "weight", v)}
+              onRepsChange={(v) => onSetsLogChange(i, "reps", v)}
+              onMarkDone={() => onSetDone(i)}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------------------
-// Container: estado da execução + cronômetro (apenas front-end)
+// Container: estado da execução + cronômetro + descanso (apenas front-end)
 // ---------------------------------------------------------------------------
+
+/** Mock da última sessão (peso/reps por série) — no futuro virá da API */
+function mockLastSession(setsCount: number): { weight: number; reps: number }[] {
+  return Array.from({ length: setsCount }, () => ({ weight: 60, reps: 10 }));
+}
 
 export default function ActiveWorkout() {
   const navigate = useNavigate();
@@ -155,35 +316,80 @@ export default function ActiveWorkout() {
     startTimer?: boolean;
   };
 
-  const workout: Workout = state.workout ?? user?.currentWorkout ?? DEMO_WORKOUT;
+  const workout: Workout = state.workout ?? user?.currentWorkout ?? getWorkoutFromStorage() ?? DEMO_WORKOUT;
   const startAt = Math.max(0, Math.min(state.startAt ?? 0, workout.exercises.length - 1));
   const startTimer = state.startTimer === true;
 
   const [currentIndex, setCurrentIndex] = useState(startAt);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(startTimer);
-
-  // Cronômetro apenas no front-end (sem backend)
-  useEffect(() => {
-    if (!isTimerRunning) return;
-    const id = setInterval(() => {
-      setElapsedSeconds((s) => s + 1);
-    }, 1000);
-    return () => clearInterval(id);
-  }, [isTimerRunning]);
+  const [heroLoaded, setHeroLoaded] = useState(false);
+  const [setsLog, setSetsLog] = useState<{ weight: string; reps: string }[]>([]);
+  const [setDone, setSetDone] = useState<boolean[]>([]);
+  const [restSeconds, setRestSeconds] = useState(0);
 
   const exercises = workout.exercises;
   const activeExercise: Exercise | undefined = exercises[currentIndex];
+
+  // Reset sets log e done ao trocar de exercício
+  useEffect(() => {
+    if (!activeExercise) return;
+    setSetsLog(Array.from({ length: activeExercise.sets }, () => ({ weight: "", reps: "" })));
+    setSetDone(Array(activeExercise.sets).fill(false));
+    setHeroLoaded(false);
+  }, [activeExercise?.id]);
+
+  // Cronômetro do treino (tempo decorrido)
+  useEffect(() => {
+    if (!isTimerRunning) return;
+    const id = setInterval(() => setElapsedSeconds((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [isTimerRunning]);
+
+  // Cronômetro de descanso: regressivo; ao chegar em 0, vibração e fim
+  useEffect(() => {
+    if (restSeconds <= 0) return;
+    const id = setInterval(() => {
+      setRestSeconds((s) => {
+        if (s <= 1) {
+          if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate(200);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [restSeconds > 0]);
+
   const nextExercises = exercises.slice(currentIndex + 1, currentIndex + 4).map((ex) => ({
     name: ex.name,
     reps: ex.reps,
   }));
 
-  const handleDone = () => {
+  const handleSetDone = useCallback((index: number) => {
+    setSetDone((prev) => {
+      const next = [...prev];
+      next[index] = true;
+      return next;
+    });
+    setRestSeconds(DEFAULT_REST_SECONDS);
+  }, []);
+
+  const handleSetsLogChange = useCallback((index: number, field: "weight" | "reps", value: string) => {
+    setSetsLog((prev) => {
+      const next = [...prev];
+      if (!next[index]) next[index] = { weight: "", reps: "" };
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  }, []);
+
+  const handleNextOrFinish = () => {
     if (currentIndex < exercises.length - 1) {
       setCurrentIndex((i) => i + 1);
     } else {
       completeWorkout();
+      clearWorkoutFromStorage();
       navigate("/dashboard/student", { replace: true });
     }
   };
@@ -205,6 +411,7 @@ export default function ActiveWorkout() {
 
   const heroImage = activeExercise.image || IMAGES.WORKOUT_MAIN;
   const contextualTitle = workout.focalMuscles || workout.name || "Strength Training";
+  const lastSessionMock = mockLastSession(activeExercise.sets);
 
   return (
     <div className="min-h-screen bg-page-dark flex flex-col">
@@ -214,11 +421,35 @@ export default function ActiveWorkout() {
       />
 
       <main className="flex-1 overflow-y-auto">
-        <ExerciseHero imageUrl={heroImage} alt={activeExercise.name} />
+        <ExerciseHero
+          imageUrl={heroImage}
+          alt={activeExercise.name}
+          loading={!heroLoaded}
+          onLoad={() => setHeroLoaded(true)}
+        />
         <ExerciseTitle reps={activeExercise.reps} exerciseName={activeExercise.name} />
-        <PrimaryActionButton label="Concluído" variant="done" onClick={handleDone} />
+        <SetsTable
+          setsCount={activeExercise.sets}
+          setsLog={setsLog}
+          setDone={setDone}
+          lastSession={lastSessionMock}
+          onSetsLogChange={handleSetsLogChange}
+          onSetDone={handleSetDone}
+        />
+        <PrimaryActionButton
+          label={currentIndex < exercises.length - 1 ? "Próximo exercício" : "Concluído treino"}
+          variant="done"
+          onClick={handleNextOrFinish}
+        />
         <NextExercisesList exercises={nextExercises} />
       </main>
+
+      {restSeconds > 0 && (
+        <RestTimerOverlay
+          secondsLeft={restSeconds}
+          onDismiss={() => setRestSeconds(0)}
+        />
+      )}
     </div>
   );
 }
