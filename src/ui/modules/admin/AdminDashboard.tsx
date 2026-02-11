@@ -38,7 +38,7 @@ export function AdminDashboard() {
     { icon: <LayoutDashboard />, label: "Dashboard", onClick: () => navigate("/dashboard/admin") },
     { icon: <Users />, label: "Usuários", onClick: () => navigate("/admin/users") },
     { icon: <BarChart3 />, label: "Relatórios", onClick: () => navigate("/admin/reports") },
-    { icon: <Settings />, label: "Configurações", onClick: () => {} },
+    { icon: <Settings />, label: "Configurações", onClick: () => navigate("/admin/settings") },
   ];
 
   // Mock data for charts
