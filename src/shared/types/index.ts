@@ -89,6 +89,20 @@ export interface DietPhoto {
     createdAt: string;
 }
 
+/** Dados de bioimpedância do aluno */
+export interface UserBioimpedance {
+    peso?: number;
+    altura?: number;
+    gordura?: number;
+    muscular?: number;
+    agua?: number;
+    visceral?: number;
+    /** Data em que foi feita a avaliação (ISO) */
+    date?: string;
+    /** Próxima data prevista (ex: 3 meses após a anterior) (ISO) */
+    nextDate?: string;
+}
+
 export interface UserState {
     name: string;
     role: UserRole; 
@@ -97,6 +111,14 @@ export interface UserState {
     level: ExperienceLevel;
     currentWorkout?: Workout;
     history?: any[];
+    /** Foto de perfil (base64 ou URL) */
+    avatarUrl?: string;
+    /** Plano atual (ex: Premium, Básico) */
+    plan?: string;
+    /** Data de vencimento do plano (ISO) */
+    planExpiration?: string;
+    /** Dados de bioimpedância */
+    bio?: UserBioimpedance;
 }
 
 /** Dia da semana no plano do personal: 1 = Segunda, 7 = Domingo */

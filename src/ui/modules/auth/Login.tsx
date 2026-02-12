@@ -8,19 +8,29 @@ import {
   ArrowRight,
   ArrowLeft,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-
 export function Login() {
-  const navigate = useNavigate();
   const [step, setStep] = useState<"welcome" | "profiles">("welcome");
 
   const handleAccess = (role: 'STUDENT' | 'PROFESSIONAL' | 'ADMIN', path: string) => {
     localStorage.setItem('@sparta:token', 'dev-access-token');
-    localStorage.setItem('@sparta:user', JSON.stringify({
+    const baseUser = {
       name: 'Pedro Iago',
-      role: role
-    }));
-    navigate(path);
+      role,
+      isAuthenticated: true,
+      token: 'dev-access-token',
+    };
+    const studentUser = role === 'STUDENT' ? {
+      ...baseUser,
+      frequency: 4,
+      goal: 'HYPERTROPHY',
+      level: 'Iniciante',
+      plan: 'Premium',
+      planExpiration: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      bio: { peso: 78, altura: 175, gordura: 16, muscular: 35, agua: 58, visceral: 4 },
+    } : baseUser;
+    localStorage.setItem('@sparta:user', JSON.stringify(studentUser));
+    window.location.hash = "#" + (path.startsWith("/") ? path : "/" + path);
+    window.location.reload();
   };
 
   const profiles = [
