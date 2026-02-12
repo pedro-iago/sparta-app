@@ -3,6 +3,14 @@ import { useNavigate } from "react-router";
 import { PageHeader } from "@/ui/components/ui/page-header";
 import { FloatingNav, type FloatingNavItem } from "@/ui/components/ui/floating-nav";
 import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import {
   Home,
   Dumbbell,
   ChefHat,
@@ -11,6 +19,8 @@ import {
   Flame,
   ChevronRight,
   Calendar as CalendarIcon,
+  TrendingDown,
+  Target,
 } from "lucide-react";
 
 const WEEKDAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
@@ -18,6 +28,40 @@ const WEEKDAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
 const MOCK_WORKOUT_DAYS = [2, 5, 9, 12, 16, 19, 23, 26];
 const MOCK_SEQUENCIA = 4;
 const MOCK_TREINOS_MES = 12;
+
+/** Volume semanal (kg) para o gráfico — últimas 10 semanas */
+const MOCK_VOLUME_DATA = [
+  { semana: "Sem 1", volume: 28500 },
+  { semana: "Sem 2", volume: 26200 },
+  { semana: "Sem 3", volume: 30100 },
+  { semana: "Sem 4", volume: 27800 },
+  { semana: "Sem 5", volume: 32000 },
+  { semana: "Sem 6", volume: 29500 },
+  { semana: "Sem 7", volume: 26800 },
+  { semana: "Sem 8", volume: 25200 },
+  { semana: "Sem 9", volume: 24100 },
+  { semana: "Sem 10", volume: 22800 },
+];
+
+const MOCK_VOLUME_TOTAL = 251932;
+const MOCK_VOLUME_TREND = -43;
+const MOCK_VOLUME_DATE_RANGE = "23 nov. 2025 - 14 fev. 2026 vs. 3 meses anteriores";
+
+/** Duração: horas por período (mock segundo card do carousel) */
+const MOCK_DURACAO_DATA = [
+  { semana: "Sem 1", horas: 2.25 },
+  { semana: "Sem 2", horas: 2.1 },
+  { semana: "Sem 3", horas: 2.4 },
+  { semana: "Sem 4", horas: 2.0 },
+  { semana: "Sem 5", horas: 2.5 },
+  { semana: "Sem 6", horas: 2.15 },
+  { semana: "Sem 7", horas: 1.9 },
+  { semana: "Sem 8", horas: 2.05 },
+  { semana: "Sem 9", horas: 1.85 },
+  { semana: "Sem 10", horas: 1.75 },
+];
+const MOCK_DURACAO_TOTAL_H = "2h 04";
+const MOCK_DURACAO_ANTERIOR = "1h 52";
 
 const MOCK_ATIVIDADE_RECENTE = [
   { data: "2026-02-12", label: "Treino A — Peito e tríceps" },
@@ -74,8 +118,11 @@ function MiniTrendBar({ trend }: { trend: number[] }) {
   );
 }
 
+const CAROUSEL_SLIDES = ["volume", "duracao"] as const;
+
 export function TrainingHistory() {
   const navigate = useNavigate();
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -131,6 +178,104 @@ export function TrainingHistory() {
           </div>
           {/* Espaço no fim do scroll no mobile */}
           <div className="shrink-0 w-2 sm:w-0" aria-hidden />
+        </section>
+
+        {/* Módulo Volume / Duração (carousel) */}
+        <section>
+          <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] overflow-hidden">
+            {carouselIndex === 0 && (
+              <div className="p-4 sm:p-5">
+                <h3 className="text-base font-semibold text-white/95 mb-1">Volume</h3>
+                <p className="text-2xl sm:text-3xl font-bold text-white tabular-nums tracking-tight">
+                  {MOCK_VOLUME_TOTAL.toLocaleString("pt-BR")} kg
+                </p>
+                <div className="flex flex-wrap items-center gap-2 mt-2">
+                  <p className="text-xs text-white/50">{MOCK_VOLUME_DATE_RANGE}</p>
+                  <span className="inline-flex items-center gap-0.5 text-xs font-medium text-red-400">
+                    <TrendingDown className="size-3.5" />
+                    {MOCK_VOLUME_TREND}%
+                  </span>
+                </div>
+                <div className="h-[140px] sm:h-[160px] w-full mt-4">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={MOCK_VOLUME_DATA} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                      <XAxis dataKey="semana" tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }} axisLine={false} tickLine={false} />
+                      <YAxis domain={["dataMin - 2000", "dataMax + 2000"]} tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }} width={28} axisLine={false} tickLine={false} tickFormatter={(v) => `${v / 1000}k`} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "#1c1c1c", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", fontSize: "12px" }}
+                        formatter={(value: number) => [`${value.toLocaleString("pt-BR")} kg`, "Volume"]}
+                        labelStyle={{ color: "rgba(255,255,255,0.7)" }}
+                      />
+                      <Line type="monotone" dataKey="volume" stroke="var(--primary)" strokeWidth={2} dot={{ fill: "var(--primary)", r: 3 }} activeDot={{ r: 4 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+            {carouselIndex === 1 && (
+              <div className="p-4 sm:p-5">
+                <h3 className="text-base font-semibold text-white/95 mb-1">Duração</h3>
+                <p className="text-2xl sm:text-3xl font-bold text-white tabular-nums tracking-tight">{MOCK_DURACAO_TOTAL_H}</p>
+                <p className="text-xs text-white/50 mt-2">Média por semana · anterior: {MOCK_DURACAO_ANTERIOR}</p>
+                <div className="h-[140px] sm:h-[160px] w-full mt-4">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={MOCK_DURACAO_DATA} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                      <XAxis dataKey="semana" tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }} axisLine={false} tickLine={false} />
+                      <YAxis domain={[0, "auto"]} tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }} width={28} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}h`} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "#1c1c1c", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", fontSize: "12px" }}
+                        formatter={(value: number) => [`${value.toFixed(1)} h`, "Duração"]}
+                        labelStyle={{ color: "rgba(255,255,255,0.7)" }}
+                      />
+                      <Line type="monotone" dataKey="horas" stroke="var(--primary)" strokeWidth={2} dot={{ fill: "var(--primary)", r: 3 }} activeDot={{ r: 4 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+            <div className="flex justify-center gap-1.5 pb-4">
+              {CAROUSEL_SLIDES.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setCarouselIndex(i)}
+                  className={`size-2 rounded-full transition-colors ${
+                    i === carouselIndex ? "bg-primary scale-110" : "bg-white/30 hover:bg-white/50"
+                  }`}
+                  aria-label={i === 0 ? "Ver Volume" : "Ver Duração"}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Módulo Objetivo sugerido */}
+        <section>
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <h2 className="text-sm font-semibold text-white/90">Objetivo sugerido</h2>
+            <button type="button" className="text-xs font-medium text-primary hover:underline shrink-0">
+              Adicionar um objetivo
+            </button>
+          </div>
+          <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-4 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="size-12 shrink-0 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                <Dumbbell className="size-6 text-primary" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-white/95">5 Treinos por semana</p>
+                <p className="text-xs text-white/50 mt-0.5">0/5 Concluídos</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="shrink-0 w-full sm:w-auto px-5 py-2.5 rounded-xl bg-primary text-[#171512] font-semibold text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+              onClick={() => {}}
+            >
+              <Target className="size-4" />
+              Definir Meta
+            </button>
+          </div>
         </section>
 
         {/* Calendário minimalista */}
