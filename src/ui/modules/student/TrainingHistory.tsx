@@ -21,7 +21,11 @@ import {
   Calendar as CalendarIcon,
   TrendingDown,
   Target,
+  X,
+  Check,
+  Plus,
 } from "lucide-react";
+import { Button } from "@/ui/components/ui/button";
 
 const WEEKDAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
 
@@ -120,9 +124,27 @@ function MiniTrendBar({ trend }: { trend: number[] }) {
 
 const CAROUSEL_SLIDES = ["volume", "duracao"] as const;
 
+const TREINOS_OPCOES = [3, 4, 5, 6, 7];
+
+const TIPOS_OBJETIVO = [
+  { id: "treinos_semana", label: "Treinos por semana", unidade: "treinos", placeholder: "Ex: 5" },
+  { id: "duracao_semana", label: "Duração semanal (horas)", unidade: "horas", placeholder: "Ex: 4" },
+  { id: "peso", label: "Meta de peso (kg)", unidade: "kg", placeholder: "Ex: 75" },
+  { id: "custom", label: "Outro objetivo", unidade: "", placeholder: "Descreva seu objetivo" },
+] as const;
+
+type CardObjetivo = "definir-meta" | "adicionar-objetivo" | null;
+
 export function TrainingHistory() {
   const navigate = useNavigate();
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [cardAberto, setCardAberto] = useState<CardObjetivo>(null);
+  const [treinosPorSemana, setTreinosPorSemana] = useState(5);
+  const [metaConfirmada, setMetaConfirmada] = useState(false);
+  const [objetivoTipo, setObjetivoTipo] = useState<string>(TIPOS_OBJETIVO[0].id);
+  const [objetivoValor, setObjetivoValor] = useState("");
+  const [objetivoCustom, setObjetivoCustom] = useState("");
+  const [objetivoEnviado, setObjetivoEnviado] = useState(false);
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -253,7 +275,11 @@ export function TrainingHistory() {
         <section>
           <div className="flex items-center justify-between gap-2 mb-3">
             <h2 className="text-sm font-semibold text-white/90">Objetivo sugerido</h2>
-            <button type="button" className="text-xs font-medium text-primary hover:underline shrink-0">
+            <button
+              type="button"
+              onClick={() => setCardAberto("adicionar-objetivo")}
+              className="text-xs font-medium text-primary hover:underline shrink-0"
+            >
               Adicionar um objetivo
             </button>
           </div>
@@ -269,8 +295,8 @@ export function TrainingHistory() {
             </div>
             <button
               type="button"
+              onClick={() => setCardAberto("definir-meta")}
               className="shrink-0 w-full sm:w-auto px-5 py-2.5 rounded-xl bg-primary text-[#171512] font-semibold text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-              onClick={() => {}}
             >
               <Target className="size-4" />
               Definir Meta
@@ -372,6 +398,216 @@ export function TrainingHistory() {
         </section>
       </main>
       </div>
+
+      {/* Card overlay — Definir meta / Adicionar objetivo */}
+      {cardAberto && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => {
+            if (!metaConfirmada && !objetivoEnviado) {
+              setCardAberto(null);
+            }
+          }}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl bg-page-dark border border-white/10 shadow-xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {cardAberto === "definir-meta" && (
+              <>
+                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Definir meta</h3>
+                    <p className="text-xs text-white/50 mt-0.5">Treinos por semana</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => !metaConfirmada && setCardAberto(null)}
+                    className="size-9 rounded-full hover:bg-white/10 flex items-center justify-center text-white/70"
+                    aria-label="Fechar"
+                  >
+                    <X className="size-5" />
+                  </button>
+                </div>
+                <div className="p-4">
+                  {metaConfirmada ? (
+                    <div className="py-6 flex flex-col items-center gap-2">
+                      <div className="rounded-full size-14 bg-primary/20 border border-primary/40 flex items-center justify-center">
+                        <Check className="size-7 text-primary" />
+                      </div>
+                      <p className="font-semibold text-white">Meta definida!</p>
+                      <p className="text-sm text-white/50">{treinosPorSemana} treinos por semana</p>
+                      <Button
+                        className="mt-4 rounded-xl bg-primary text-[#171512]"
+                        onClick={() => {
+                          setMetaConfirmada(false);
+                          setCardAberto(null);
+                        }}
+                      >
+                        Fechar
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-sm text-white/70 mb-4">Selecione a quantidade:</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {TREINOS_OPCOES.map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setTreinosPorSemana(n)}
+                            className={`min-w-[48px] py-3 px-4 rounded-xl font-semibold text-sm transition-colors ${
+                              treinosPorSemana === n
+                                ? "bg-primary text-[#171512] border border-primary"
+                                : "bg-white/[0.06] text-white/90 border border-white/10 hover:bg-white/[0.08]"
+                            }`}
+                          >
+                            {n}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-xs text-white/45 mb-4">
+                        Progresso: 0/{treinosPorSemana} Concluídos
+                      </p>
+                      <div className="flex gap-3">
+                        <Button
+                          className="flex-1 rounded-xl h-11 font-semibold gap-2 bg-primary text-[#171512]"
+                          onClick={() => setMetaConfirmada(true)}
+                        >
+                          <Target className="size-4" />
+                          Confirmar
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="rounded-xl h-11 text-white/70 hover:bg-white/5 border border-white/10"
+                          onClick={() => setCardAberto(null)}
+                        >
+                          Cancelar
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </>
+            )}
+
+            {cardAberto === "adicionar-objetivo" && (
+              <>
+                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Adicionar objetivo</h3>
+                    <p className="text-xs text-white/50 mt-0.5">Crie uma meta</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => !objetivoEnviado && setCardAberto(null)}
+                    className="size-9 rounded-full hover:bg-white/10 flex items-center justify-center text-white/70"
+                    aria-label="Fechar"
+                  >
+                    <X className="size-5" />
+                  </button>
+                </div>
+                <div className="p-4">
+                  {objetivoEnviado ? (
+                    <div className="py-6 flex flex-col items-center gap-2">
+                      <div className="rounded-full size-14 bg-primary/20 border border-primary/40 flex items-center justify-center">
+                        <Plus className="size-7 text-primary" />
+                      </div>
+                      <p className="font-semibold text-white">Objetivo adicionado!</p>
+                      <p className="text-sm text-white/50">Ele aparecerá na sua lista.</p>
+                      <Button
+                        className="mt-4 rounded-xl bg-primary text-[#171512]"
+                        onClick={() => {
+                          setObjetivoEnviado(false);
+                          setObjetivoValor("");
+                          setObjetivoCustom("");
+                          setCardAberto(null);
+                        }}
+                      >
+                        Fechar
+                      </Button>
+                    </div>
+                  ) : (
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const tipoSel = TIPOS_OBJETIVO.find((t) => t.id === objetivoTipo);
+                        const isCustom = objetivoTipo === "custom";
+                        if (isCustom ? !objetivoCustom.trim() : !objetivoValor.trim()) return;
+                        setObjetivoEnviado(true);
+                      }}
+                      className="space-y-4"
+                    >
+                      <label className="block">
+                        <span className="text-sm font-medium text-white/90">Tipo</span>
+                        <select
+                          value={objetivoTipo}
+                          onChange={(e) => setObjetivoTipo(e.target.value)}
+                          className="mt-2 w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        >
+                          {TIPOS_OBJETIVO.map((t) => (
+                            <option key={t.id} value={t.id} className="bg-[#1a1a1a] text-white">
+                              {t.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      {objetivoTipo !== "custom" ? (
+                        <label className="block">
+                          <span className="text-sm font-medium text-white/90">
+                            Meta {(TIPOS_OBJETIVO.find((t) => t.id === objetivoTipo))?.unidade}
+                          </span>
+                          <input
+                            type="text"
+                            inputMode={objetivoTipo === "peso" ? "decimal" : "numeric"}
+                            value={objetivoValor}
+                            onChange={(e) => setObjetivoValor(e.target.value)}
+                            placeholder={(TIPOS_OBJETIVO.find((t) => t.id === objetivoTipo))?.placeholder}
+                            className="mt-2 w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                          />
+                        </label>
+                      ) : (
+                        <label className="block">
+                          <span className="text-sm font-medium text-white/90">Descrição</span>
+                          <input
+                            type="text"
+                            value={objetivoCustom}
+                            onChange={(e) => setObjetivoCustom(e.target.value)}
+                            placeholder="Ex: Correr 5 km por semana"
+                            className="mt-2 w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                          />
+                        </label>
+                      )}
+                      <div className="flex gap-3 pt-2">
+                        <Button
+                          type="submit"
+                          className="flex-1 rounded-xl h-11 font-semibold gap-2 bg-primary text-[#171512]"
+                          disabled={
+                            objetivoTipo === "custom"
+                              ? !objetivoCustom.trim()
+                              : !objetivoValor.trim()
+                          }
+                        >
+                          <Plus className="size-4" />
+                          Adicionar
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="rounded-xl h-11 text-white/70 hover:bg-white/5 border border-white/10"
+                          onClick={() => setCardAberto(null)}
+                        >
+                          Cancelar
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       <FloatingNav items={floatingNavItems} position="bottom-center" />
     </div>
