@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PageHeader } from "@/ui/components/ui/page-header";
 import { useNavigate } from 'react-router-dom';
 import { useSparta } from '../../../shared/context/SpartaContext';
 import { ExperienceLevel } from '../../../shared/types';
@@ -44,12 +45,16 @@ const RoutineSettings: React.FC = () => {
 
   return (
     <div className="relative flex h-full w-full flex-col bg-background-dark text-white">
-      <header className="flex items-center bg-background-dark p-4 pb-2 justify-between sticky top-0 z-20 border-b border-white/5">
-        <button onClick={() => navigate(-1)} className="text-white">
-          <span className="material-symbols-outlined text-[24px]">arrow_back</span>
-        </button>
-        <h2 className="text-xs font-bold tracking-[0.15em] uppercase opacity-80">Anamnese</h2>
-      </header>
+      <div className="sticky top-0 z-20 p-4 max-w-4xl mx-auto w-full">
+        <PageHeader
+          title="Anamnese"
+          leftSlot={
+            <button onClick={() => navigate(-1)} className="text-white flex items-center justify-center size-10 rounded-full hover:bg-white/5 transition-colors" aria-label="Voltar">
+              <span className="material-symbols-outlined text-[24px]">arrow_back</span>
+            </button>
+          }
+        />
+      </div>
       
       <main className="flex-1 overflow-y-auto pb-24 p-6 space-y-8">
         

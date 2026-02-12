@@ -1,3 +1,9 @@
+/**
+ * URL da foto de fundo do card "Treino de hoje" (dashboard do aluno).
+ * Cole o link externo aqui. Ex.: 'https://exemplo.com/sua-imagem.jpg'
+ * Se vazio, o card usa o fundo dourado padrão.
+ */
+export const TREINO_HOJE_ILLUSTRATION_URL = '/teste.jpg';
 
 export const IMAGES = {
   LOGO_SHIELD: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAD7jTlj1mFLyhrTeGLyxo3LEEaKcFU-9CnUXYaXaEPygBDOd5lI-T9a_lUfB_1ORDvURynPeIOc6LhF9MPU6Wfhq2eST3HsX4GjRoqLTB__w_csbMbBRw7F23c2Zivf4uO1mTgQRYRpZApHSaw3htxFzA1YxxYE5MRR9zZfT4y9lMuqvXiLrHXXKHhPiXT7NU_20tow_qGhwE1_BWklhL3Z-CCP6khPSkZDV2t0R-gK-7ZjQ2MCzQkYiJT7ZKUaQhJWiDZctCpp2Xs',
@@ -8,5 +14,7 @@ export const IMAGES = {
   AVATAR_PLACEHOLDER: 'https://lh3.googleusercontent.com/aida-public/AB6AXuABK9rWFtVS_Y_lw8IwTS2Rpjn89AULIZJDCUX89g9cUcyrmH4b5d3FE6d1OfgMmaqqF2fqIl7cyjKECT9dYElNwqWwVOCZAgricuNQhv0g8gSNnpUf2T0QsGPrqjTGyW9kpRGFC8LTyRm2dObNeIoljXWPOdGrwdGf7GrECIbLUwin96AtfCLPzB74dsEHrZafliyYXF2bC6qTXki_qrrPOPzNrPY6DLeBQn8N-8mUfmj7kT1zeQLpDr499FkxqphMTMqBGIIwUyK7',
   WORKOUT_MAIN: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyRkLuxp7ACAeYbQkXYYhzA7nOZKJadG2FzX8Ick86Ml3u8bA3a08VLeWAuarTmS4v3SoIhjhVnPmsHUmNDOfoWGAVYYQYmBakd6IECz6vjPMgrwoVH9IxsYUhCDsawEASW0W0dcTnIEobOQSbUw_8e9zV-bn7kCQ95awQBF0Xy5A5EVgM4Vxt_4luVsKNzxYRSoIT9f6yzkeLVRfb_MMddQCjzOiEvJ3t_BsNAQDk3sUUh5A4GBkSlBAadkV4M87PmzbPITR3ySAy',
   MEAL_PLACEHOLDER: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAT-fwapE-QPqDUIIbHUdOeTOI2KXWoXkXwbfX9gD7qEstFHho7uRqRXm22mEq24itm71bQvrI3V4czDBUjCcBFo98XKN07vJPln6RCmRqQePfI4X262W9JaT7tbO0dTPSOcsorBsB276fiOHT001N8mXffP3OukFpsdi3iN1TEpOGQoX9WABi34KTenY5B37pJi7ZkLv4sYvicxvRUshuwQPsfHE9PjReprchvAwWvnGBszVUdRTxz5hBvSWSHl-B5U0A5oVq6-PWU',
-  INSTRUCTOR: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAL-5AszS-vZ2Nrt08IzBUtaVBkHurc3XpJT5lH_zu0TX5GXqe3D6W1P7uRnsAgOG4ENhdXdEjxgVWvWeqW-r9OSvTuvwEq7SctDWQPBf7FbK36SGmFj6czywlbPY0tJ--eBSCBCvJaUL2y-31sZTwY1cyFVPuqL461bJsQRlDossgFHt8USGaWX0gNHQaoOG8C_n5BIOs981LweXPiekl2pHL-WYeLMBJraEaXWteRe5Ys4wwjxq0KBilJUpDmmgGcq0meRYhqcjAn'
+  INSTRUCTOR: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAL-5AszS-vZ2Nrt08IzBUtaVBkHurc3XpJT5lH_zu0TX5GXqe3D6W1P7uRnsAgOG4ENhdXdEjxgVWvWeqW-r9OSvTuvwEq7SctDWQPBf7FbK36SGmFj6czywlbPY0tJ--eBSCBCvJaUL2y-31sZTwY1cyFVPuqL461bJsQRlDossgFHt8USGaWX0gNHQaoOG8C_n5BIOs981LweXPiekl2pHL-WYeLMBJraEaXWteRe5Ys4wwjxq0KBilJUpDmmgGcq0meRYhqcjAn',
+  /** Silhueta composição corporal (figura balanceada/atlética) */
+  COMPOSICAO_CORPORAL: '/composicao-corporal.png'
 };

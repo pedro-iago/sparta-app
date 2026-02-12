@@ -1,16 +1,37 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSparta } from '../../../shared/context/SpartaContext';
-import { Meal } from '../../../shared/types';
-import { IMAGES } from '../../../shared/constants/images';
+import React, { useState, useRef } from "react";
+import { PageHeader } from "@/ui/components/ui/page-header";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSparta } from "@/shared/context/SpartaContext";
+import { Meal } from "@/shared/types";
+import { IMAGES } from "@/shared/constants/images";
+import { FloatingNav, type FloatingNavItem } from "@/ui/components/ui/floating-nav";
+import { Home, Dumbbell, ChefHat, User, RotateCcw, CheckCircle, ArrowLeft, Camera } from "lucide-react";
+
+// Mock: alternativas após análise (3 variações)
+const MOCK_ALTERNATIVES = [
+  { id: "alt-1", name: "Abacate Haas", calories: 160, unit: "100g", image: IMAGES.MEAL_PLACEHOLDER },
+  { id: "alt-2", name: "Morango Orgânico", calories: 33, unit: "100g", image: IMAGES.MEAL_PLACEHOLDER },
+  { id: "alt-3", name: "Tomate Cereja", calories: 18, unit: "100g", image: IMAGES.MEAL_PLACEHOLDER },
+];
+
+type MealScanState = { mealId?: string; mealName?: string } | null;
 
 const MealScan: React.FC = () => {
   const navigate = useNavigate();
-  const { addMeal } = useSparta();
+  const location = useLocation();
+  const { addMeal, addDietPhoto } = useSparta();
+  const mealInfo = (location.state as MealScanState) ?? null;
   const [analyzing, setAnalyzing] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{ name: string; calories: number; protein: number; carbs: number; fat: number } | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const floatingNavItems: FloatingNavItem[] = [
+    { icon: <Home />, label: "Início", onClick: () => navigate("/dashboard/student") },
+    { icon: <Dumbbell />, label: "Treinos", onClick: () => navigate("/student/workouts") },
+    { icon: <ChefHat />, label: "Dieta", onClick: () => navigate("/diet") },
+    { icon: <User />, label: "Perfil", onClick: () => navigate("/dashboard/perfil") },
+  ];
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -18,22 +39,19 @@ const MealScan: React.FC = () => {
 
     const reader = new FileReader();
     reader.onloadend = async () => {
-      // const base64 = (reader.result as string).split(',')[1];
       setImagePreview(reader.result as string);
-      
       setAnalyzing(true);
+      setResult(null);
       try {
-        // TODO: Enviar para Backend Java -> n8n -> Gemini
-        // Por enquanto, simulando resposta para não quebrar
         setTimeout(() => {
-             setResult({
-                 name: "Refeição Detectada (Simulação)",
-                 calories: 500,
-                 protein: 30,
-                 carbs: 50,
-                 fat: 15
-             });
-             setAnalyzing(false);
+          setResult({
+            name: "Abacaxi",
+            calories: 82,
+            protein: 0.9,
+            carbs: 22,
+            fat: 0.2,
+          });
+          setAnalyzing(false);
         }, 2000);
       } catch (err) {
         console.error("Analysis failed", err);
@@ -52,102 +70,186 @@ const MealScan: React.FC = () => {
       protein: result.protein,
       carbs: result.carbs,
       fat: result.fat,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      completed: true
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      completed: true,
     };
     addMeal(newMeal);
-    navigate('/diet');
+    if (imagePreview && mealInfo?.mealId && mealInfo?.mealName) {
+      addDietPhoto({
+        id: `photo-${Date.now()}`,
+        mealId: mealInfo.mealId,
+        mealName: mealInfo.mealName,
+        imageUrl: imagePreview,
+        createdAt: new Date().toISOString(),
+      });
+    } else if (imagePreview) {
+      addDietPhoto({
+        id: `photo-${Date.now()}`,
+        mealId: newMeal.id,
+        mealName: mealInfo?.mealName ?? result.name,
+        imageUrl: imagePreview,
+        createdAt: new Date().toISOString(),
+      });
+    }
+    navigate("/diet");
+  };
+
+  const handleRequestReview = () => {
+    alert("Solicitação de revisão enviada ao nutricionista. Você será notificado.");
   };
 
   return (
-    <div className="relative flex h-full w-full flex-col bg-background-dark border-x border-[#333] overflow-hidden">
-      <header className="flex items-center justify-between p-4 pb-2 bg-background-dark z-10">
-        <button onClick={() => navigate('/diet')} className="text-white flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-white/5 transition-colors"><span className="material-symbols-outlined text-2xl">arrow_back</span></button>
-        <h1 className="text-white text-base font-bold tracking-wider uppercase flex-1 text-center text-opacity-90">Registro IA</h1>
-        <button className="flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-white/5 transition-colors"><span className="material-symbols-outlined text-2xl">settings</span></button>
-      </header>
-
-      <main className="flex-1 flex flex-col gap-6 px-4 pt-2 pb-24 overflow-y-auto no-scrollbar">
-        <div className="flex flex-col gap-1">
-          <div className="flex justify-between items-baseline">
-            <h2 className="text-white text-3xl font-bold tracking-tight uppercase">Refeição <span className="text-primary text-xl align-top">A.I.</span></h2>
-            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-[#333] border border-[#444]">
-              <div className={`w-2 h-2 rounded-full ${analyzing ? 'bg-yellow-500 animate-bounce' : 'bg-green-500 animate-pulse'}`}></div>
-              <span className="text-[10px] font-bold tracking-widest uppercase text-gray-300">{analyzing ? 'Analisando...' : 'Online'}</span>
-            </div>
-          </div>
-          <p className="text-[#b6aea0] text-sm font-medium tracking-wide flex items-center gap-2"><span className="material-symbols-outlined text-sm">schedule</span>Sparta Vision AI</p>
-        </div>
-
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-[#25221d] group shadow-lg border border-[#333]">
-          {imagePreview ? (
-             <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
-          ) : (
-            <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{backgroundImage: `url('${IMAGES.MEAL_PLACEHOLDER}')`}}></div>
-          )}
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
-          
-          <div className="absolute inset-0 p-4 flex flex-col justify-between pointer-events-none">
-            <div className="flex justify-between"><div className="w-8 h-8 border-l-2 border-t-2 border-primary/70 rounded-tl-lg"></div><div className="w-8 h-8 border-r-2 border-t-2 border-primary/70 rounded-tr-lg"></div></div>
-            {analyzing && <div className="scan-line"></div>}
-            <div className="flex justify-between items-end"><div className="w-8 h-8 border-l-2 border-b-2 border-primary/70 rounded-bl-lg"></div><div className="w-8 h-8 border-r-2 border-b-2 border-primary/70 rounded-br-lg"></div></div>
-          </div>
-          
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-8 pointer-events-auto">
-            <button 
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full bg-primary/90 hover:bg-primary backdrop-blur-sm text-black font-bold h-10 rounded-lg flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(213,159,57,0.3)] transition-all transform active:scale-95 text-sm"
+    <div className="min-h-screen min-h-[100dvh] bg-page-dark flex flex-col pb-24">
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 flex-1 flex flex-col">
+        <PageHeader
+          title={analyzing ? "Analisando..." : mealInfo?.mealName ? `Foto: ${mealInfo.mealName}` : "Registro por Foto"}
+          subtitle={analyzing ? "Identificando alimentos" : mealInfo?.mealName ? `Envie foto do seu ${mealInfo.mealName.toLowerCase()}` : "Envie uma foto da sua refeição"}
+          leftSlot={
+            <button
+              onClick={() => navigate("/diet")}
+              className="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/5 transition-colors"
+              aria-label="Voltar"
             >
-              <span className="material-symbols-outlined text-lg">photo_camera</span>
-              {imagePreview ? 'RE-ESCANEAR PRATO' : 'CAPTURAR REFEIÇÃO'}
+              <ArrowLeft className="size-5" />
             </button>
-            <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileChange} />
-          </div>
-        </div>
+          }
+        />
 
-        {result && (
-          <div className="space-y-4">
-            <div className="flex items-end justify-between border-b border-[#333] pb-4">
+        <main className="flex-1 flex flex-col gap-5 pb-6">
+          {/* Área de captura */}
+          <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/10">
+            {imagePreview ? (
+              <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
+            ) : (
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-60"
+                style={{ backgroundImage: `url('${IMAGES.MEAL_PLACEHOLDER}')` }}
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
+            {analyzing && <div className="scan-line" />}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-4/5 h-4/5 border-2 border-dashed border-white/30 rounded-2xl" />
+            </div>
+
+            <div className="absolute bottom-4 left-0 right-0 px-4">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full bg-primary hover:bg-primary/90 text-[#171512] font-bold h-12 rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98]"
+              >
+                <Camera className="size-5" />
+                {imagePreview ? "Nova foto" : "Capturar ou escolher foto"}
+              </button>
+              <input
+                type="file"
+                className="hidden"
+                ref={fileInputRef}
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </div>
+          </div>
+
+          {/* Resultado da análise */}
+          {result && (
+            <div className="space-y-5">
+              {/* Card do item identificado */}
+              <div className="glass-card-3d rounded-2xl p-4 flex items-center gap-4 border border-white/10">
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt=""
+                    className="size-16 sm:size-20 rounded-xl object-cover shrink-0"
+                  />
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="text-lg font-bold text-white">{result.name}</p>
+                  <p className="text-2xl font-bold text-primary">{result.calories} kcal / 100g</p>
+                </div>
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-success/20 border border-success/30">
+                  <CheckCircle className="size-4 text-success" />
+                  <span className="text-[10px] font-bold text-success uppercase">Analisado</span>
+                </div>
+              </div>
+
+              {/* Valores nutricionais */}
+              <div className="glass-card-3d rounded-2xl p-4 border border-white/10">
+                <h3 className="text-sm font-bold text-white mb-3">Valores nutricionais (100g)</h3>
+                <div className="space-y-3">
+                  {[
+                    { label: "Proteína", value: result.protein, color: "bg-primary" },
+                    { label: "Gorduras", value: result.fat, color: "bg-amber-500" },
+                    { label: "Carboidratos", value: result.carbs, color: "bg-amber-400/80" },
+                  ].map(({ label, value, color }) => (
+                    <div key={label}>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span className="text-white/70">{label}</span>
+                        <span className="text-white font-medium">{value} g</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${color}`}
+                          style={{ width: `${Math.min(100, (value / 50) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Outras opções (3 variações) */}
               <div>
-                <div className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Combustível Detectado</div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold text-primary tracking-tighter">{result.calories}</span>
-                  <span className="text-sm font-bold text-gray-400 uppercase">Kcal</span>
+                <h3 className="text-sm font-bold text-white mb-3">Outras opções</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  {MOCK_ALTERNATIVES.map((alt) => (
+                    <button
+                      key={alt.id}
+                      type="button"
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-white/[0.06] border border-white/10 hover:border-primary/30 hover:bg-primary/5 transition-colors"
+                    >
+                      <div className="size-12 rounded-lg overflow-hidden bg-white/10">
+                        <img src={alt.image} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      <p className="text-[10px] font-medium text-white/90 text-center line-clamp-2">
+                        {alt.name}
+                      </p>
+                      <p className="text-[9px] text-primary/80">{alt.calories} kcal</p>
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-1">
-                <div className="bg-success/10 border border-success/30 text-success px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Análise Completa</div>
-                <span className="text-[10px] text-gray-500">{result.name}</span>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { label: 'Proteína', val: result.protein, color: 'border-primary' },
-                { label: 'Carbo', val: result.carbs, color: 'border-warning' },
-                { label: 'Gordura', val: result.fat, color: 'border-success' }
-              ].map(macro => (
-                <div key={macro.label} className={`bg-card-dark p-3 rounded-lg border-b-2 ${macro.color} flex flex-col gap-2 relative overflow-hidden`}>
-                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{macro.label}</div>
-                  <div className="text-xl font-bold text-white">{macro.val}<span className="text-xs text-gray-500 ml-0.5">g</span></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </main>
 
-      <footer className="fixed bottom-0 w-full max-w-md bg-background-dark/95 backdrop-blur-xl border-t border-[#333] p-4 flex gap-3 z-50">
-        <button onClick={() => {setImagePreview(null); setResult(null);}} className="flex-1 h-12 rounded-lg border border-[#444] text-gray-300 font-bold text-sm hover:bg-[#333] transition-colors uppercase tracking-wide">Limpar</button>
-        <button 
-          onClick={confirmMeal}
-          disabled={!result || analyzing}
-          className={`flex-[2] h-12 rounded-lg font-bold text-sm transition-all transform active:scale-95 uppercase tracking-wide flex items-center justify-center gap-2 ${(!result || analyzing) ? 'bg-gray-700 text-gray-500' : 'bg-primary text-[#171512] shadow-[0_0_20px_rgba(213,159,57,0.2)]'}`}
-        >
-          <span className="material-symbols-outlined text-lg">check_circle</span>Confirmar Registro
-        </button>
-      </footer>
+              {/* Botões de ação */}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleRequestReview}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-white/20 text-white/80 hover:bg-white/5 text-sm font-medium"
+                >
+                  <RotateCcw className="size-4" />
+                  Solicitar revisão
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmMeal}
+                  className="flex-[2] flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-[#171512] font-bold hover:bg-primary/90 transition-colors"
+                >
+                  <CheckCircle className="size-5" />
+                  Confirmar registro
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!result && !analyzing && (
+            <p className="text-center text-sm text-white/50 py-4">
+              Tire uma foto da sua refeição para análise automática
+            </p>
+          )}
+        </main>
+      </div>
+
+      <FloatingNav items={floatingNavItems} position="bottom-center" />
     </div>
   );
 };

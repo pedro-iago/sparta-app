@@ -1,5 +1,5 @@
 import { apiClient } from '../api/apiClient';
-import { CreateTrainingDTO } from '../types';
+import type { StudentWorkoutPlanResponse, CreateTrainingDTO } from '../types';
 
 export const trainingService = {
   createRequest: async (data: CreateTrainingDTO) => {
@@ -7,8 +7,9 @@ export const trainingService = {
     return response;
   },
 
-  getMyTrainings: async () => {
-    const { data } = await apiClient.get('/trainings/my-trainings');
+  /** Plano de treinos da semana (seg a dom) passado pelo personal. Endpoint: GET /student/workout-plan */
+  getMyWorkoutPlan: async (): Promise<StudentWorkoutPlanResponse> => {
+    const { data } = await apiClient.get<StudentWorkoutPlanResponse>('/student/workout-plan');
     return data;
-  }
+  },
 };
