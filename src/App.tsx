@@ -14,6 +14,7 @@ import DailyDiet from './ui/modules/student/DailyDiet';
 import MealScan from './ui/modules/student/MealScan';
 import DietPhotoGallery from './ui/modules/student/DietPhotoGallery';
 import { StudentProfile } from './ui/modules/student/StudentProfile';
+import { TrainingHistory } from './ui/modules/student/TrainingHistory';
 
 // Profissional (Trainer) - Ajustado para o nome do arquivo na sua tree
 import { TrainerDashboard as ProfessionalDashboard } from './ui/modules/professional/ProfessionalDashboard';
@@ -88,6 +89,11 @@ const App: React.FC = () => {
           <Route path="/dashboard/perfil" element={
             <PrivateRoute allowedRole="STUDENT">
               <StudentProfile />
+            </PrivateRoute>
+          } />
+          <Route path="/dashboard/perfil/historico" element={
+            <PrivateRoute allowedRole="STUDENT">
+              <TrainingHistory />
             </PrivateRoute>
           } />
           <Route path="/student/profile" element={

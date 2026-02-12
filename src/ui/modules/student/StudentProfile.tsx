@@ -18,6 +18,9 @@ import {
   Camera,
   RefreshCw,
   CalendarCheck,
+  BarChart3,
+  ChevronRight,
+  Flame,
 } from "lucide-react";
 import { Goal } from "@/shared/types";
 import { IMAGES } from "@/shared/constants/images";
@@ -193,6 +196,37 @@ export function StudentProfile() {
                 <span className="text-sm font-medium text-white/90">{goalLabel}</span>
               </div>
             </div>
+          </div>
+
+          {/* Registro de treino (preview) */}
+          <div className="glass-card-3d rounded-2xl p-5 sm:p-6">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center gap-2 mb-1">
+              <BarChart3 className="size-4 text-primary/80" />
+              Registro de treino
+            </h3>
+            <p className="text-xs text-white/50 mb-4">
+              Veja padrões no seu histórico de treino
+            </p>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="rounded-xl bg-white/[0.06] border border-white/10 p-4 flex flex-col items-center gap-1">
+                <Flame className="size-5 text-primary/80" />
+                <span className="text-xl font-bold text-white">4</span>
+                <span className="text-[10px] text-white/50 uppercase tracking-wider">Sequência semanal</span>
+              </div>
+              <div className="rounded-xl bg-white/[0.06] border border-white/10 p-4 flex flex-col items-center gap-1">
+                <Dumbbell className="size-5 text-primary/80" />
+                <span className="text-xl font-bold text-white">12</span>
+                <span className="text-[10px] text-white/50 uppercase tracking-wider">treinos este mês</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard/perfil/historico")}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary/15 border border-primary/30 text-primary hover:bg-primary/25 transition-colors font-medium text-sm"
+            >
+              Ver histórico completo
+              <ChevronRight className="size-4" />
+            </button>
           </div>
 
           {/* Bioimpedância */}
