@@ -170,41 +170,38 @@ export function ProfessionalStudents() {
             </Button>
           }
         />
-        <div className="py-5 sm:py-6 lg:py-8 pb-24">
-          {/* Barra de ferramentas: busca + contagem + ação */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
+        <div className="py-5 sm:py-6 lg:py-8 pb-28 sm:pb-24">
+          {/* Barra de busca */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
             <div className="flex-1 w-full sm:max-w-md relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/45 pointer-events-none" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-white/45 pointer-events-none" />
               <Input
                 placeholder="Buscar por nome ou e-mail..."
-                className="pl-10 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 h-10 sm:h-10 min-h-[44px] rounded-xl text-sm"
+                className="pl-11 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 h-12 sm:h-11 min-h-[48px] rounded-xl text-sm"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <span className="text-xs text-white/50 whitespace-nowrap">
-                {filteredStudents.length} {filteredStudents.length === 1 ? "aluno" : "alunos"}
-              </span>
-            </div>
+            <span className="text-sm text-white/50 whitespace-nowrap hidden sm:inline">
+              {filteredStudents.length} {filteredStudents.length === 1 ? "aluno" : "alunos"}
+            </span>
           </div>
 
-          {/* Filtros */}
-          <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-white/70">
-              <Filter className="size-4 shrink-0" />
-              <span className="font-medium">Filtros</span>
+          {/* Filtros — scroll horizontal no mobile */}
+          <div className="mb-6 sm:mb-8">
+            <div className="flex items-center gap-2 mb-3">
+              <Filter className="size-4 shrink-0 text-white/60" />
+              <span className="text-xs font-medium text-white/60 uppercase tracking-wider">Filtros</span>
             </div>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">Status</span>
-                <div className="flex rounded-lg border border-white/10 bg-white/[0.04] p-0.5">
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 no-scrollbar sm:overflow-visible sm:flex-wrap">
+              <div className="flex shrink-0 items-center gap-2">
+                <div className="flex rounded-xl border border-white/10 bg-white/[0.04] p-1 gap-1">
                   {(["all", "active", "inactive", "pending"] as const).map((value) => (
                     <button
                       key={value}
                       type="button"
                       onClick={() => setStatusFilter(value)}
-                      className={`px-2.5 sm:px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium rounded-md transition-colors touch-manipulation ${
+                      className={`px-4 py-2.5 sm:px-3 sm:py-2 text-xs font-medium rounded-lg transition-colors touch-manipulation min-h-[44px] sm:min-h-0 whitespace-nowrap ${
                         statusFilter === value
                           ? "bg-primary text-primary-foreground"
                           : "text-white/60 hover:text-white hover:bg-white/[0.06]"
@@ -215,10 +212,9 @@ export function ProfessionalStudents() {
                   ))}
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">Plano</span>
+              <div className="flex shrink-0 items-center gap-2">
                 <Select value={planFilter} onValueChange={setPlanFilter}>
-                  <SelectTrigger className="w-[120px] sm:w-[130px] h-9 sm:h-8 min-h-[44px] sm:min-h-0 text-xs bg-white/[0.06] border-white/10 rounded-xl">
+                  <SelectTrigger className="w-[140px] sm:w-[130px] h-11 sm:h-9 min-h-[44px] sm:min-h-0 text-xs bg-white/[0.06] border-white/10 rounded-xl">
                     <SelectValue placeholder="Plano" />
                   </SelectTrigger>
                   <SelectContent>
@@ -231,10 +227,9 @@ export function ProfessionalStudents() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">Frequência</span>
+              <div className="flex shrink-0 items-center gap-2">
                 <Select value={frequencyFilter} onValueChange={setFrequencyFilter}>
-                  <SelectTrigger className="w-[120px] sm:w-[130px] h-9 sm:h-8 min-h-[44px] sm:min-h-0 text-xs bg-white/[0.06] border-white/10 rounded-xl">
+                  <SelectTrigger className="w-[140px] sm:w-[130px] h-11 sm:h-9 min-h-[44px] sm:min-h-0 text-xs bg-white/[0.06] border-white/10 rounded-xl">
                     <SelectValue placeholder="Por semana" />
                   </SelectTrigger>
                   <SelectContent>
@@ -247,35 +242,33 @@ export function ProfessionalStudents() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setSortAlphabetical((v) => !v)}
-                  className={`flex items-center gap-2 px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-8 text-xs font-medium rounded-lg border transition-colors touch-manipulation ${
-                    sortAlphabetical
-                      ? "bg-primary/20 border-primary/40 text-primary"
-                      : "border-white/10 bg-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.08]"
-                  }`}
-                  title={sortAlphabetical ? "Desativar ordem alfabética" : "Ordenar A–Z"}
-                >
-                  <ArrowDownAZ className="size-4 shrink-0" />
-                  A–Z
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setSortAlphabetical((v) => !v)}
+                className={`flex shrink-0 items-center gap-2 px-4 py-2.5 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-9 text-xs font-medium rounded-xl border transition-colors touch-manipulation ${
+                  sortAlphabetical
+                    ? "bg-primary/20 border-primary/40 text-primary"
+                    : "border-white/10 bg-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.08]"
+                }`}
+                title={sortAlphabetical ? "Desativar ordem alfabética" : "Ordenar A–Z"}
+              >
+                <ArrowDownAZ className="size-4 shrink-0" />
+                A–Z
+              </button>
             </div>
           </div>
 
           {/* Lista de alunos */}
           <section aria-label="Lista de alunos">
-            <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4">
-              <h2 className="text-xs sm:text-sm font-medium text-white/70">
+            <div className="flex items-center justify-between gap-4 mb-4 sm:mb-5">
+              <h2 className="text-sm font-medium text-white/80">
                 Alunos <span className="text-white/50 font-normal">({filteredStudents.length})</span>
               </h2>
-              <div className="glass-card-3d rounded-xl p-0.5 flex" role="group" aria-label="Visualização">
+              <div className="flex rounded-xl border border-white/10 bg-white/[0.04] p-1 gap-1" role="group" aria-label="Visualização">
                 <button
                   type="button"
                   onClick={() => setViewMode("list")}
-                  className={`p-2 rounded-lg min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:p-2 flex items-center justify-center transition-colors touch-manipulation ${
+                  className={`p-2.5 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors touch-manipulation ${
                     viewMode === "list"
                       ? "bg-primary/80 text-primary-foreground"
                       : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
@@ -283,12 +276,12 @@ export function ProfessionalStudents() {
                   title="Lista"
                   aria-pressed={viewMode === "list"}
                 >
-                  <List className="size-4 sm:size-4.5" />
+                  <List className="size-5" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded-lg min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:p-2 flex items-center justify-center transition-colors touch-manipulation ${
+                  className={`p-2.5 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors touch-manipulation ${
                     viewMode === "grid"
                       ? "bg-primary/80 text-primary-foreground"
                       : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
@@ -296,50 +289,50 @@ export function ProfessionalStudents() {
                   title="Quadros"
                   aria-pressed={viewMode === "grid"}
                 >
-                  <LayoutGrid className="size-4 sm:size-4.5" />
+                  <LayoutGrid className="size-5" />
                 </button>
               </div>
             </div>
             <div
               className={
                 viewMode === "list"
-                  ? "space-y-2 sm:space-y-3"
-                  : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
+                  ? "space-y-4 sm:space-y-4"
+                  : "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5"
               }
             >
               {filteredStudents.map((student) => (
                 <div
                   key={student.id}
-                  className="glass-card-3d rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col h-full min-w-0"
+                  className="glass-card-3d rounded-2xl p-5 sm:p-6 flex flex-col min-w-0 border border-white/5"
                 >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between flex-shrink-0 min-w-0">
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="bg-white/[0.08] rounded-full size-10 sm:size-11 flex items-center justify-center shrink-0">
-                        <span className="text-sm font-semibold text-primary/80">{student.avatar}</span>
+                  <div className="flex flex-col gap-4 sm:gap-4">
+                    <div className="flex items-start gap-4 min-w-0">
+                      <div className="bg-white/[0.08] rounded-full size-12 sm:size-14 flex items-center justify-center shrink-0 border border-white/5">
+                        <span className="text-base font-semibold text-primary/80">{student.avatar}</span>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-medium text-white/95 truncate">{student.name}</h3>
-                        <p className="text-xs text-white/50 truncate mt-0.5">{student.email}</p>
-                        <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                          <span className="text-[11px] text-white/45">{student.plan}</span>
-                          <span className="text-[11px] text-white/40">{student.frequency}x/semana</span>
+                        <h3 className="font-semibold text-white text-base sm:text-lg truncate">{student.name}</h3>
+                        <p className="text-sm text-white/50 truncate mt-0.5">{student.email}</p>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-white/45">
+                          <span>{student.plan}</span>
+                          <span>{student.frequency}x/semana</span>
                           {student.lastWorkout && student.lastWorkout !== "—" && (
-                            <span className="text-[11px] text-white/40">Último: {student.lastWorkout}</span>
+                            <span>Último: {student.lastWorkout}</span>
                           )}
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between sm:justify-end gap-3 border-t border-white/[0.06] pt-3 sm:pt-0 sm:border-0 flex-shrink-0">
+                    <div className="flex items-center justify-between gap-3 pt-3 border-t border-white/[0.06]">
                       {getStatusLabel(student.status)}
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-white/70 hover:text-white h-9 sm:h-8 min-h-[44px] sm:min-h-0 text-xs shrink-0 touch-manipulation"
+                        className="text-white/70 hover:text-white hover:bg-white/5 h-11 min-h-[44px] px-4 text-sm shrink-0 touch-manipulation rounded-xl"
                         onClick={() => setSelectedStudent(student)}
                       >
-                        <Eye className="size-3.5 sm:mr-1.5" />
+                        <Eye className="size-4 mr-2" />
                         Ver
-                        <ChevronRight className="size-3.5 hidden sm:inline ml-0.5" />
+                        <ChevronRight className="size-4" />
                       </Button>
                     </div>
                   </div>
@@ -349,7 +342,7 @@ export function ProfessionalStudents() {
           </section>
 
           {filteredStudents.length === 0 && (
-            <div className="text-center py-12 px-4 rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.03]">
+            <div className="text-center py-16 sm:py-20 px-6 rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.03]">
               <Users className="size-12 mx-auto mb-3 text-white/30" />
               <p className="text-white/70 font-medium text-sm">
                 Nenhum aluno encontrado
