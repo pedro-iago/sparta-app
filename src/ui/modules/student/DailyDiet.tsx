@@ -90,7 +90,7 @@ const MOCK_MEALS_WITH_VARIATIONS: (Meal & { variations: MealVariation[] })[] = [
 
 const DailyDiet: React.FC = () => {
   const navigate = useNavigate();
-  const { meals: mealsFromContext, dietPhotos, user } = useSparta();
+  const { meals: mealsFromContext, user } = useSparta();
   const [activeTab, setActiveTab] = useState<MacroTab>("calories");
   const [expandedMealId, setExpandedMealId] = useState<string | null>(null);
   const [selectedVariation, setSelectedVariation] = useState<Record<string, string>>({});
@@ -340,56 +340,38 @@ const DailyDiet: React.FC = () => {
             <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">
               Galeria de fotos da dieta enviada pelo cliente
             </h3>
-            {dietPhotos.length > 0 ? (
-              <div className="space-y-3">
-                <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
-                  {(dietPhotos.length >= 4 ? dietPhotos.slice(0, 4) : dietPhotos).map((photo) => (
-                    <div
-                      key={photo.id}
-                      className="group relative aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/10"
-                    >
-                      <img
-                        src={photo.imageUrl}
-                        alt={`${photo.mealName}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="absolute bottom-0 left-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <p className="text-[10px] font-medium text-white truncate">{photo.mealName}</p>
-                        <p className="text-[9px] text-white/70">
-                          {new Date(photo.createdAt).toLocaleDateString("pt-BR", {
-                            day: "2-digit",
-                            month: "short",
-                          })}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {dietPhotos.length >= 4 && (
-                  <button
-                    type="button"
-                    onClick={() => navigate("/diet/photos")}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white/[0.06] border border-white/10 text-white/80 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-colors font-medium text-sm"
-                  >
-                    Ver tudo
-                    <ChevronRight className="size-4" />
-                  </button>
-                )}
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <img
+                  src={IMAGES.FOOD_1}
+                  alt="Dieta 1"
+                  className="w-full aspect-square object-cover rounded-xl border border-white/10"
+                />
+                <img
+                  src={IMAGES.FOOD_2}
+                  alt="Dieta 2"
+                  className="w-full aspect-square object-cover rounded-xl border border-white/10"
+                />
+                <img
+                  src={IMAGES.FOOD_3}
+                  alt="Dieta 3"
+                  className="w-full aspect-square object-cover rounded-xl border border-white/10"
+                />
+                <img
+                  src={IMAGES.FOOD_4}
+                  alt="Dieta 4"
+                  className="w-full aspect-square object-cover rounded-xl border border-white/10"
+                />
               </div>
-            ) : (
-              <div className="glass-card-3d rounded-2xl p-8 flex flex-col items-center justify-center gap-2 border border-white/10 border-dashed">
-                <div className="size-14 rounded-full bg-white/[0.06] flex items-center justify-center">
-                  <Camera className="size-7 text-white/40" />
-                </div>
-                <p className="text-sm text-white/60 text-center">
-                  Nenhuma foto enviada ainda
-                </p>
-                <p className="text-[11px] text-white/40 text-center">
-                  Use o ícone de câmera em cada refeição para registrar
-                </p>
-              </div>
-            )}
+              <button
+                type="button"
+                onClick={() => navigate("/diet/photos")}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white/[0.06] border border-white/10 text-white/80 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-colors font-medium text-sm"
+              >
+                Ver mais
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -16,5 +16,10 @@ export const IMAGES = {
   MEAL_PLACEHOLDER: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAT-fwapE-QPqDUIIbHUdOeTOI2KXWoXkXwbfX9gD7qEstFHho7uRqRXm22mEq24itm71bQvrI3V4czDBUjCcBFo98XKN07vJPln6RCmRqQePfI4X262W9JaT7tbO0dTPSOcsorBsB276fiOHT001N8mXffP3OukFpsdi3iN1TEpOGQoX9WABi34KTenY5B37pJi7ZkLv4sYvicxvRUshuwQPsfHE9PjReprchvAwWvnGBszVUdRTxz5hBvSWSHl-B5U0A5oVq6-PWU',
   INSTRUCTOR: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAL-5AszS-vZ2Nrt08IzBUtaVBkHurc3XpJT5lH_zu0TX5GXqe3D6W1P7uRnsAgOG4ENhdXdEjxgVWvWeqW-r9OSvTuvwEq7SctDWQPBf7FbK36SGmFj6czywlbPY0tJ--eBSCBCvJaUL2y-31sZTwY1cyFVPuqL461bJsQRlDossgFHt8USGaWX0gNHQaoOG8C_n5BIOs981LweXPiekl2pHL-WYeLMBJraEaXWteRe5Ys4wwjxq0KBilJUpDmmgGcq0meRYhqcjAn',
   /** Silhueta composição corporal (figura balanceada/atlética) */
-  COMPOSICAO_CORPORAL: '/composicao-corporal.png'
+  COMPOSICAO_CORPORAL: '/composicao-corporal.png',
+  /** Fotos de exemplo da dieta (perfil) */
+  FOOD_1: '/food1.jpg',
+  FOOD_2: '/food2.jpg',
+  FOOD_3: '/food3.jpg',
+  FOOD_4: '/food4.jpg',
 };

@@ -4,10 +4,20 @@ import { useSparta } from "@/shared/context/SpartaContext";
 import { PageHeader } from "@/ui/components/ui/page-header";
 import { FloatingNav, type FloatingNavItem } from "@/ui/components/ui/floating-nav";
 import { Home, Dumbbell, ChefHat, User, ArrowLeft, X } from "lucide-react";
+import { IMAGES } from "@/shared/constants/images";
+
+/** 5 fotos da dieta (food1–4 + repetida para fechar 5) */
+const GALLERY_FOOD_PHOTOS = [
+  IMAGES.FOOD_1,
+  IMAGES.FOOD_2,
+  IMAGES.FOOD_3,
+  IMAGES.FOOD_4,
+  IMAGES.FOOD_1,
+];
 
 const DietPhotoGallery: React.FC = () => {
   const navigate = useNavigate();
-  const { dietPhotos } = useSparta();
+  useSparta();
   const [lightboxPhoto, setLightboxPhoto] = useState<string | null>(null);
 
   const floatingNavItems: FloatingNavItem[] = [
@@ -22,7 +32,7 @@ const DietPhotoGallery: React.FC = () => {
       <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex-1">
         <PageHeader
           title="Galeria de fotos"
-          subtitle={`${dietPhotos.length} foto${dietPhotos.length !== 1 ? "s" : ""} da dieta enviada`}
+          subtitle="5 fotos da dieta enviada"
           leftSlot={
             <button
               onClick={() => navigate("/diet")}
@@ -35,46 +45,32 @@ const DietPhotoGallery: React.FC = () => {
         />
 
         <div className="py-4">
-          {dietPhotos.length > 0 ? (
-            <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
-              {dietPhotos.map((photo) => (
-                <button
-                  key={photo.id}
-                  type="button"
-                  onClick={() => setLightboxPhoto(photo.imageUrl)}
-                  className="group relative aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                >
-                  <img
-                    src={photo.imageUrl}
-                    alt={photo.mealName}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 text-left">
-                    <p className="text-xs font-medium text-white truncate">{photo.mealName}</p>
-                    <p className="text-[10px] text-white/70">
-                      {new Date(photo.createdAt).toLocaleDateString("pt-BR", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="glass-card-3d rounded-2xl p-12 flex flex-col items-center justify-center gap-3 border border-white/10 border-dashed text-center">
-              <p className="text-white/70">Nenhuma foto na galeria</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {GALLERY_FOOD_PHOTOS.map((src, index) => (
               <button
+                key={index}
                 type="button"
-                onClick={() => navigate("/diet")}
-                className="text-primary font-medium hover:underline"
+                onClick={() => setLightboxPhoto(src)}
+                className="group relative aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
-                Voltar para a dieta
+                <img
+                  src={src}
+                  alt={`Dieta ${index + 1}`}
+                  className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
-            </div>
-          )}
+            ))}
+          </div>
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={() => navigate("/diet")}
+              className="text-white/70 hover:text-white font-medium text-sm flex items-center gap-2"
+            >
+              Voltar para a dieta
+            </button>
+          </div>
         </div>
       </div>
 
