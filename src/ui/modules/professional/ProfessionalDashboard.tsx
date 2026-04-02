@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Card } from "@/ui/components/ui/card";
 import { Button } from "@/ui/components/ui/button";
-import { Badge } from "@/ui/components/ui/badge";
 import { Input } from "@/ui/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/components/ui/tabs";
+import { PageHeader } from "@/ui/components/ui/page-header";
+import { FloatingNav, type FloatingNavItem } from "@/ui/components/ui/floating-nav";
 import {
   Users,
   Search,
@@ -14,7 +13,8 @@ import {
   ThumbsUp,
   Sparkles,
   LogOut,
-  Filter,
+  List,
+  LayoutGrid,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 
@@ -32,6 +32,20 @@ interface WorkoutReview {
 export function TrainerDashboard() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<"all" | "draft" | "pending" | "active">("all");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+
+  const handleLogout = () => {
+    localStorage.removeItem("@sparta:user");
+    navigate("/", { replace: true });
+    window.location.reload();
+  };
+
+  const floatingNavItems: FloatingNavItem[] = [
+    { icon: <FileText />, label: "Revisões", onClick: () => {} },
+    { icon: <Users />, label: "Meus Alunos", onClick: () => navigate("/dashboard/professional/students") },
+    { icon: <Sparkles />, label: "IA Assistente", onClick: () => navigate("/assistant") },
+    { icon: <LogOut />, label: "Sair", onClick: handleLogout },
+  ];
 
   const mockReviews: WorkoutReview[] = [
     {
@@ -92,16 +106,12 @@ export function TrainerDashboard() {
     activeWorkouts: mockReviews.filter(r => r.status === "active").length,
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusLabel = (status: string) => {
     switch (status) {
-      case "draft":
-        return <Badge className="bg-muted text-muted-foreground border-muted">Draft</Badge>;
-      case "pending":
-        return <Badge className="bg-primary/20 text-primary border-primary/30">Pendente</Badge>;
-      case "active":
-        return <Badge className="bg-success/20 text-success border-success/30">Ativo</Badge>;
-      default:
-        return null;
+      case "draft": return <span className="text-[11px] font-medium text-white/45">Draft</span>;
+      case "pending": return <span className="text-[11px] font-medium text-primary/80">Pendente</span>;
+      case "active": return <span className="text-[11px] font-medium text-primary/80">Ativo</span>;
+      default: return null;
     }
   };
 
@@ -110,191 +120,188 @@ export function TrainerDashboard() {
     : mockReviews.filter(r => r.status === filter);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-sidebar border-r border-sidebar-border p-6 hidden lg:block">
-        <div className="mb-8">
-          <h1 className="text-2xl mb-1 text-primary">SPARTA AI</h1>
-          <p className="text-sm text-muted-foreground">Personal Trainer</p>
-        </div>
+    <div className="min-h-screen min-h-[100dvh] bg-page-dark">
+      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <PageHeader
+          title="Dashboard do Personal"
+          subtitle="Gerencie treinos e acompanhe seus alunos"
+          rightSlot={
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="size-10 sm:size-11 min-h-[44px] min-w-[44px] text-white/60 hover:text-white touch-manipulation rounded-lg"
+              title="Sair"
+            >
+              <LogOut className="size-5 sm:size-6" />
+            </Button>
+          }
+        />
 
-        <nav className="space-y-2">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start bg-primary/10 text-primary hover:bg-primary/20"
-          >
-            <FileText className="mr-3 h-5 w-5" />
-            Revisões
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start"
-            onClick={() => navigate("/trainer/students")}
-          >
-            <Users className="mr-3 h-5 w-5" />
-            Meus Alunos
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            <Sparkles className="mr-3 h-5 w-5" />
-            IA Assistente
-          </Button>
-        </nav>
-
-        <div className="absolute bottom-6 left-6 right-6">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-muted-foreground"
-            onClick={() => navigate("/")}
-          >
-            <LogOut className="mr-3 h-5 w-5" />
-            Sair
-          </Button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="lg:ml-64">
-        {/* Header */}
-        <div className="bg-card border-b border-border p-6">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl mb-2">Dashboard do Personal</h1>
-            <p className="text-muted-foreground">Gerencie treinos e acompanhe seus alunos</p>
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="p-6 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <Card className="bg-card p-6 border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Total de Alunos</p>
-                  <p className="text-3xl font-bold">{stats.totalStudents}</p>
+        <div className="py-5 sm:py-6 lg:py-8 pb-24">
+          {/* Cards de estatísticas — em mobile 3 colunas compactas, em desktop 3 colunas confortáveis */}
+          <section className="grid grid-cols-3 gap-2 sm:gap-4 mb-5 sm:mb-8" aria-label="Resumo">
+            <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-medium text-white/50 truncate">Alunos</p>
+                  <p className="text-lg sm:text-2xl font-semibold text-white/95 tabular-nums">{stats.totalStudents}</p>
                 </div>
-                <div className="bg-primary/20 p-3 rounded-full">
-                  <Users className="h-6 w-6 text-primary" />
+                <div className="hidden sm:block bg-white/[0.08] p-2 rounded-full shrink-0">
+                  <Users className="size-5 text-primary/70" />
                 </div>
               </div>
-            </Card>
-
-            <Card className="bg-card p-6 border-primary/30">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Revisões Pendentes</p>
-                  <p className="text-3xl font-bold text-primary">{stats.pendingReviews}</p>
-                </div>
-                <div className="bg-primary/20 p-3 rounded-full">
-                  <Clock className="h-6 w-6 text-primary" />
-                </div>
-              </div>
-            </Card>
-
-            <Card className="bg-card p-6 border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Treinos Ativos</p>
-                  <p className="text-3xl font-bold">{stats.activeWorkouts}</p>
-                </div>
-                <div className="bg-success/20 p-3 rounded-full">
-                  <CheckCircle className="h-6 w-6 text-success" />
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Filters and Search */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Buscar por aluno ou treino..." 
-                className="pl-10 bg-muted border-border"
-              />
             </div>
-            <div className="flex gap-2">
-              <Button 
-                variant={filter === "all" ? "default" : "outline"}
-                onClick={() => setFilter("all")}
-                className={filter === "all" ? "bg-primary text-primary-foreground" : ""}
-              >
-                Todos
-              </Button>
-              <Button 
-                variant={filter === "draft" ? "default" : "outline"}
-                onClick={() => setFilter("draft")}
-                className={filter === "draft" ? "bg-primary text-primary-foreground" : ""}
-              >
-                Draft
-              </Button>
-              <Button 
-                variant={filter === "pending" ? "default" : "outline"}
-                onClick={() => setFilter("pending")}
-                className={filter === "pending" ? "bg-primary text-primary-foreground" : ""}
-              >
-                Pendentes
-              </Button>
-              <Button 
-                variant={filter === "active" ? "default" : "outline"}
-                onClick={() => setFilter("active")}
-                className={filter === "active" ? "bg-primary text-primary-foreground" : ""}
-              >
-                Ativos
-              </Button>
+            <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-medium text-white/50 truncate">Pendentes</p>
+                  <p className="text-lg sm:text-2xl font-semibold text-primary/90 tabular-nums">{stats.pendingReviews}</p>
+                </div>
+                <div className="hidden sm:block bg-white/[0.08] p-2 rounded-full shrink-0">
+                  <Clock className="size-5 text-primary/70" />
+                </div>
+              </div>
             </div>
-          </div>
+            <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-medium text-white/50 truncate">Ativos</p>
+                  <p className="text-lg sm:text-2xl font-semibold text-white/95 tabular-nums">{stats.activeWorkouts}</p>
+                </div>
+                <div className="hidden sm:block bg-white/[0.08] p-2 rounded-full shrink-0">
+                  <CheckCircle className="size-5 text-primary/70" />
+                </div>
+              </div>
+            </div>
+          </section>
 
-          {/* Reviews List */}
-          <div className="space-y-4">
-            {filteredReviews.map((review) => (
-              <Card key={review.id} className="bg-card border-border hover:border-primary/50 transition-colors">
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-primary/20 rounded-full w-12 h-12 flex items-center justify-center">
-                        <span className="font-bold text-primary">{review.studentAvatar}</span>
+          {/* Busca e filtros */}
+          <section className="mb-4 sm:mb-6" aria-label="Filtrar revisões">
+            <div className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex-1 w-full min-w-0 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/45 pointer-events-none" />
+                <Input
+                  placeholder="Buscar aluno ou treino..."
+                  className="w-full pl-9 sm:pl-10 min-h-[44px] sm:min-h-0 h-10 bg-white/[0.06] border-white/[0.08] text-white placeholder:text-white/40 rounded-xl text-sm"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {(["all", "draft", "pending", "active"] as const).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => setFilter(f)}
+                    className={`px-2.5 sm:px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-lg text-[11px] sm:text-xs font-medium transition-colors shrink-0 touch-manipulation ${
+                      filter === f
+                        ? "bg-primary/80 text-primary-foreground"
+                        : "bg-white/[0.06] text-white/60 hover:text-white/80 border border-white/[0.06]"
+                    }`}
+                  >
+                    {f === "all" ? "Todos" : f === "draft" ? "Draft" : f === "pending" ? "Pendentes" : "Ativos"}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Lista de revisões */}
+          <section aria-label="Revisões para aprovar">
+            <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4">
+              <h2 className="text-xs sm:text-sm font-medium text-white/70">
+                Revisões <span className="text-white/50 font-normal">({filteredReviews.length})</span>
+              </h2>
+              <div className="glass-card-3d rounded-xl p-0.5 flex" role="group" aria-label="Visualização">
+                <button
+                  type="button"
+                  onClick={() => setViewMode("list")}
+                  className={`p-2 rounded-lg min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center transition-colors touch-manipulation ${
+                    viewMode === "list"
+                      ? "bg-primary/80 text-primary-foreground"
+                      : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
+                  }`}
+                  title="Lista"
+                  aria-pressed={viewMode === "list"}
+                >
+                  <List className="size-4 sm:size-4.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("grid")}
+                  className={`p-2 rounded-lg min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center transition-colors touch-manipulation ${
+                    viewMode === "grid"
+                      ? "bg-primary/80 text-primary-foreground"
+                      : "text-white/50 hover:text-white/80 hover:bg-white/[0.06]"
+                  }`}
+                  title="Quadros"
+                  aria-pressed={viewMode === "grid"}
+                >
+                  <LayoutGrid className="size-4 sm:size-4.5" />
+                </button>
+              </div>
+            </div>
+            <div
+              className={
+                viewMode === "list"
+                  ? "space-y-2 sm:space-y-3"
+                  : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
+              }
+            >
+              {filteredReviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="glass-card-3d rounded-xl sm:rounded-2xl p-3 sm:p-5 flex flex-col h-full"
+                >
+                  <div className="flex flex-col gap-3 sm:gap-0 sm:flex-row sm:items-start sm:justify-between flex-shrink-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="bg-white/[0.08] rounded-full size-9 sm:size-10 flex items-center justify-center shrink-0">
+                        <span className="text-xs sm:text-sm font-semibold text-primary/80">{review.studentAvatar}</span>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-lg">{review.studentName}</h3>
-                        <p className="text-sm text-muted-foreground">{review.createdAt}</p>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-medium text-white/95 truncate text-sm sm:text-base">{review.studentName}</h3>
+                        <p className="text-[10px] sm:text-[11px] text-white/45">{review.createdAt}</p>
                       </div>
                     </div>
-                    {getStatusBadge(review.status)}
-                  </div>
-
-                  <div className="mb-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sparkles className="h-4 w-4 text-primary" />
-                      <h4 className="font-semibold">{review.workoutName}</h4>
-                      <Badge variant="secondary" className="text-xs">
-                        Gerado por IA
-                      </Badge>
+                    <div className="flex items-center justify-between sm:justify-end gap-2">
+                      {getStatusLabel(review.status)}
                     </div>
-                    <p className="text-sm text-muted-foreground">{review.description}</p>
                   </div>
-
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      className="flex-1 border-primary/30 hover:bg-primary/10"
+                  <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-white/[0.06] flex-1 min-h-0">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                      <Sparkles className="size-3.5 text-primary/60 shrink-0" />
+                      <h4 className="font-medium text-white/90 text-xs sm:text-sm truncate">{review.workoutName}</h4>
+                      <span className="text-[10px] font-medium text-white/45">IA</span>
+                    </div>
+                    <p className="text-[11px] sm:text-xs text-white/55 line-clamp-2">{review.description}</p>
+                  </div>
+                  <div className="mt-3 flex flex-row gap-2 flex-shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="flex-1 text-white/70 hover:text-white hover:bg-white/[0.06] min-h-[44px] sm:min-h-8 h-auto py-2 text-xs sm:text-sm touch-manipulation"
                       onClick={() => navigate("/trainer/edit-workout")}
                     >
-                      <Eye className="mr-2 h-4 w-4" />
+                      <Eye className="mr-2 size-3.5 shrink-0" />
                       Revisar
                     </Button>
-                    <Button 
-                      className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="flex-1 rounded-xl font-medium min-h-[44px] sm:min-h-8 h-auto py-2 text-xs sm:text-sm touch-manipulation"
                       onClick={() => navigate("/trainer/edit-workout")}
                     >
-                      <ThumbsUp className="mr-2 h-4 w-4" />
+                      <ThumbsUp className="mr-2 size-3.5 shrink-0" />
                       Aprovar
                     </Button>
                   </div>
                 </div>
-              </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
+
+      <FloatingNav items={floatingNavItems} position="bottom-center" />
     </div>
   );
 }

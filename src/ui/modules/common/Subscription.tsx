@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PageHeader } from "@/ui/components/ui/page-header";
 
 const Subscription: React.FC = () => {
   const navigate = useNavigate();
@@ -7,12 +8,16 @@ const Subscription: React.FC = () => {
   return (
     <div className="bg-background-dark h-full overflow-y-auto no-scrollbar flex flex-col items-center">
       <div className="w-full max-w-md bg-background-dark min-h-full flex flex-col relative">
-        <header className="flex items-center px-4 py-4 justify-between bg-transparent z-10 sticky top-0 backdrop-blur-sm bg-background-dark/80">
-          <button onClick={() => navigate('/dashboard')} className="text-white flex size-10 shrink-0 items-center justify-center rounded-lg hover:bg-white/5 transition-colors">
-            <span className="material-symbols-outlined text-[24px]">arrow_back</span>
-          </button>
-          <h2 className="text-white text-lg font-bold uppercase tracking-widest flex-1 text-center pr-10">Planos</h2>
-        </header>
+        <div className="sticky top-0 z-10 px-4 py-4">
+          <PageHeader
+            title="Planos"
+            leftSlot={
+              <button onClick={() => navigate('/dashboard')} className="text-white flex size-10 shrink-0 items-center justify-center rounded-lg hover:bg-white/5 transition-colors" aria-label="Voltar">
+                <span className="material-symbols-outlined text-[24px]">arrow_back</span>
+              </button>
+            }
+          />
+        </div>
 
         <main className="flex-1 flex flex-col px-5 pb-8">
           <div className="mb-6 mt-2 text-center">
